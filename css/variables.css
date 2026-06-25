@@ -1,0 +1,52 @@
+/* ============================================================
+   VISA Careiro — Variáveis CSS e Reset
+   Edite aqui as cores, sombras e tamanhos do sistema.
+   ============================================================ */
+
+:root {
+    --rosa: #f9b8c8;
+    --rosa-dark: #f48aab;
+    --rosa-soft: #fde8ee;
+    --amarelo: #fde68a;
+    --amarelo-dark: #f6c341;
+    --amarelo-soft: #fffbeb;
+    --bg: #f5e8ef;
+    --surface: rgba(255, 255, 255, 0.72);
+    --surface2: rgba(253, 244, 246, 0.8);
+    --text: #2d1b24;
+    --text-light: #7a4f61;
+    --text-muted: #b08090;
+    --border: rgba(244, 138, 171, 0.25);
+    --border-solid: #f5c6d4;
+    --success: #6bcb8b;
+    --success-bg: #e8f8ee;
+    --warning: #f6a623;
+    --warning-bg: #fff4e0;
+    --danger: #e05a6b;
+    --danger-bg: #fdeef0;
+    --glass-blur: blur(18px);
+    --shadow: 0 4px 24px rgba(244, 138, 171, 0.13);
+    --shadow-hover: 0 8px 36px rgba(244, 138, 171, 0.24);
+    --radius: 16px;
+    --radius-sm: 10px;
+}
+
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Desabilitar seleção de texto em elementos de interface */
+body, .sidebar, .topbar, table, .modal-header, .modal-body,
+.badge, .stat-card, .dash-card, .history-item, .nav-item,
+.table-header, .pagination, td, th, label, .filter-chip,
+.topbar-badge, .count-badge, .alert-strip, .agent-item,
+.config-card, .print-header, .print-body {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Permitir seleção onde o usuário digita */
+input, textarea, select, [contenteditable] {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+#printContent { user-select: text; -webkit-user-select: text; }
