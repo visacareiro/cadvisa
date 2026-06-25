@@ -12,12 +12,12 @@
 
   // ── Credenciais do Projeto Firebase ────────────────────────────────────
   const firebaseConfig = {
-  apiKey: "AIzaSyAhyxpNRHDrUrwzlEz6Oj8qu0QdXXPla64",
-  authDomain: "visa-54770.firebaseapp.com",
-  projectId: "visa-54770",
-  storageBucket: "visa-54770.firebasestorage.app",
-  messagingSenderId: "477249120108",
-  appId: "1:477249120108:web:8b7e470d7d2e1f74cd7549"
+  apiKey: "AIzaSyBq3R72sCbOiYfJ52xDFj2jLpRu0yhgYhI",
+  authDomain: "cadvisa-667da.firebaseapp.com",
+  projectId: "cadvisa-667da",
+  storageBucket: "cadvisa-667da.firebasestorage.app",
+  messagingSenderId: "369275850587",
+  appId: "1:369275850587:web:88883e8a656371029e147e"
 };
 
   // ── Inicializa o app evitando duplicidade ───────────────────────────────
