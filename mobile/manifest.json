@@ -1,0 +1,61 @@
+{
+  "name": "VISA Careiro — Cadastro Sanitário",
+  "short_name": "VISA Careiro",
+  "description": "Sistema de Cadastro Sanitário Municipal da Vigilância Sanitária de Careiro, AM",
+
+  "start_url": "/fiscalizacao/mobile/index.html",
+  "scope": "/fiscalizacao/mobile/",
+
+  "display": "standalone",
+  "orientation": "portrait-primary",
+
+  "background_color": "#f5e8ef",
+  "theme_color": "#f48aab",
+
+  "lang": "pt-BR",
+  "categories": ["productivity", "government"],
+
+  "icons": [
+    {
+      "src": "/fiscalizacao/mobile/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/fiscalizacao/mobile/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/fiscalizacao/mobile/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Estabelecimentos",
+      "short_name": "Estabs.",
+      "description": "Ver lista de estabelecimentos",
+      "url": "/fiscalizacao/mobile/index.html#estabelecimentos",
+      "icons": [
+        { "src": "/fiscalizacao/mobile/icon-96.png", "sizes": "96x96", "type": "image/png" }
+      ]
+    },
+    {
+      "name": "Fiscalizações",
+      "short_name": "Fiscalizar",
+      "description": "Registrar fiscalização",
+      "url": "/fiscalizacao/mobile/index.html#fiscalizacao",
+      "icons": [
+        { "src": "/fiscalizacao/mobile/icon-96.png", "sizes": "96x96", "type": "image/png" }
+      ]
+    }
+  ],
+
+  "prefer_related_applications": false
+}
