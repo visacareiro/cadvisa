@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280">
+    <title>CADVISA — Cadastro Sanitário</title>
+
+    <!-- ====================================================
+         Ícones e PWA
+    ==================================================== -->
+    <link rel="icon" type="image/jpeg" href="assets/imag01.jpeg"">
+    <link rel="shortcut icon" type="image/jpeg" href="assets/imag01.jpeg"">
+    <link rel="apple-touch-icon" href="assets/imag01.jpeg"">
+    <meta name="theme-color" content="#f48aab">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="CADVISA">
+    <link rel="manifest" id="__manifest__">
+    <script>
+        (function () {
+            const m = {
+                name: "CADVISA — Cadastro Sanitário",
+                short_name: "CADVISA",
+                start_url: "./",
+                display: "standalone",
+                background_color: "#f5e8ef",
+                theme_color: "#f48aab",
+                icons: [
+                    { src: "assets/imag01.jpeg", sizes: "192x192", type: "image/jpeg", purpose: "any" },
+                    { src: "assets/imag01.jpeg", sizes: "512x512", type: "image/jpeg", purpose: "any" },
+                    { src: "assets/imag01.jpeg", sizes: "192x192", type: "image/jpeg", purpose: "maskable" },
+                    { src: "assets/imag01.jpeg", sizes: "512x512", type: "image/jpeg", purpose: "maskable" }
+                ]
+            };
+            const blob = new Blob([JSON.stringify(m)], { type: 'application/manifest+json' });
+            document.getElementById('__manifest__').href = URL.createObjectURL(blob);
+        })();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+    <!-- ====================================================
+         LOGIN
+    ==================================================== -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="logo-icon">
+                    <img src="assets/imag01.jpeg" alt="CADVISA" onerror="this.parentElement.textContent='🏥'">
+                </div>
+                <h2>CADVISA</h2>
+                <p>Cadastro Sanitário Municipal — Acesso Administrativo</p>
+            </div>
+            <div class="login-err" id="loginErr"></div>
+            <div class="login-field">
+                <label>E-mail</label>
+                <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email">
+            </div>
+            <div class="login-field">
+                <label>Senha</label>
+                <input type="password" id="loginSenha" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <button class="login-btn-full" id="loginBtn" onclick="doLogin()">Entrar</button>
+            <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text-muted)">
+                CADVISA — Vigilância Sanitária de Careiro, AM
+            </div>
+            <div class="login-dev">Desenvolvido por Darlan Cardoso</div>
+        </div>
+    </div>
+
+    <!-- ====================================================
+         LOADING OVERLAY
+    ==================================================== -->
+    <div id="loadingOverlay" style="display:none;position:fixed;inset:0;background:rgba(245,232,239,.96);z-index:9000;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+        <div style="width:72px;height:72px;border-radius:22px;overflow:hidden;box-shadow:0 6px 24px rgba(244,138,171,0.35)">
+            <img src="assets/imag01.jpeg" alt="CADVISA" style="width:100%;height:100%;object-fit:cover"
+                onerror="this.parentElement.innerHTML='🏥';this.parentElement.style.cssText='display:flex;align-items:center;justify-content:center;font-size:44px'">
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700">CADVISA</div>
+        <div style="font-size:13px;color:var(--text-muted)">Carregando dados da nuvem…</div>
+        <div style="width:200px;height:6px;background:rgba(249,184,200,0.4);border-radius:50px;overflow:hidden;margin-top:4px">
+            <div style="height:100%;width:60%;background:var(--rosa-dark);border-radius:50px;animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
+        </div>
+    </div>
+
+    <!-- ====================================================
+         SIDEBAR
+    ==================================================== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <img src="assets/imag01.jpeg" alt="CADVISA Logo" onerror="this.parentElement.textContent='🏥'">
+            </div>
+            <h1>CADVISA</h1>
+            <p>Cadastro Sanitário Municipal</p>
+        </div>
+
+        <div class="nav-section">Menu Principal</div>
+        <button class="nav-item active" data-page="dashboard"        onclick="navigateTo('dashboard')">        <span class="icon">📊</span> Dashboard</button>
+        <button class="nav-item"        data-page="estabelecimentos"  onclick="navigateTo('estabelecimentos')"> <span class="icon">🏪</span> Estabelecimentos</button>
+        <button class="nav-item"        data-page="inativos"          onclick="navigateTo('inativos')">          <span class="icon">🚫</span> Inativos</button>
+
+        <!-- NOVO BOTÃO ALVARÁ — MOVIDO PARA O MENU PRINCIPAL -->
+        <button class="nav-item" onclick="window.open('alvara.html', '_blank')">
+            <span class="icon">📄</span> Alvará
+        </button>
+
+        <div class="nav-section">Fiscalização</div>
+        <button class="nav-item"        data-page="cronograma"        onclick="navigateTo('cronograma')">        <span class="icon">📅</span> Cronograma Mensal</button>
+        <button class="nav-item"        data-page="legislacao"        onclick="navigateTo('legislacao')">        <span class="icon">📚</span> Legislação</button>
+
+        <div class="nav-section">Sistema</div>
+        <button class="nav-item"        data-page="configuracoes"     onclick="navigateTo('configuracoes')">     <span class="icon">⚙️</span> Configurações</button>
+
+        <div class="sidebar-footer">
+            <div>Município de Careiro, AM</div>
+            <div style="margin-top:4px">CADVISA — Vigilância Sanitária</div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--text-muted);opacity:.75">
+                Desenvolvido por <strong style="color:var(--text-light)">Darlan Cardoso</strong>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ====================================================
+         CONTEÚDO PRINCIPAL
+    ==================================================== -->
+    <main class="main">
+        <div class="topbar">
+            <button class="hamburger" onclick="toggleSidebar()">☰</button>
+            <div class="topbar-title" id="topbarTitle">📊 Dashboard</div>
+            <div class="topbar-stats">
+                <div class="topbar-badge">Total: <span id="badgeTotal">0</span></div>
+                <div class="topbar-badge">Fiscalizados: <span id="badgeFiscalizado">0</span></div>
+                <div class="topbar-badge" id="topbarUserName" style="background:var(--rosa-soft);border-color:var(--rosa-dark);">👤 Usuário</div>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <div class="page active" id="page-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card amarelo">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-label">Fiscalizados</div>
+                        <div class="stat-value" id="statFiscalizado">0</div>
+                        <div class="stat-sub">Fiscalização em dia</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-label">Pendentes</div>
+                        <div class="stat-value" id="statPendente">0</div>
+                        <div class="stat-sub">Fiscalização vencido &gt;4 meses</div>
+                    </div>
+                    <div class="stat-card" style="--card-accent:#b08090">
+                        <div class="stat-icon">🚫</div>
+                        <div class="stat-label">Inativos</div>
+                        <div class="stat-value" id="statInativos" style="color:var(--text-muted)">0</div>
+                        <div class="stat-sub">Estabelecimentos desativados</div>
+                    </div>
+                    <div class="stat-card azul">
+                        <div class="stat-icon">🏪</div>
+                        <div class="stat-label">Total Ativos</div>
+                        <div class="stat-value" id="statTotalAtivos">0</div>
+                        <div class="stat-sub">Fiscalizados + Pendentes</div>
+                    </div>
+                </div>
+
+                <div class="risco-row" id="riscoRow">
+                    <div class="risco-row-title">⚡ Classe de Risco</div>
+                    <div class="risco-items" id="riscoChart"></div>
+                </div>
+
+                <div class="dash-grid">
+                    <div class="dash-card">
+                        <h3>📍 Estabelecimentos por Localidade</h3>
+                        <div id="bairroChart"></div>
+                    </div>
+                    <div class="dash-card">
+                        <h3>🏷️ Categorias</h3>
+                        <div id="catChart"></div>
+                    </div>
+                </div>
+
+                <div id="painelRegistroContainer"></div>
+            </div>
+
+            <!-- ESTABELECIMENTOS -->
+            <div class="page" id="page-estabelecimentos">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input class="search-input" id="searchInput" type="text"
+                        placeholder="Buscar por nome, Razão social, CPF/CNPJ, endereço, CNAE..."
+                        oninput="onSearch()">
+                    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+                </div>
+                <div class="filters-row">
+                    <select class="filter-select" id="filterBairro"    onchange="setFilter('bairro', this.value)"><option value="">Todas as localidades</option></select>
+                    <select class="filter-select" id="filterCategoria" onchange="onFilterCategoria()"><option value="">Todas as categorias</option></select>
+                    <select class="filter-select" id="filterRisco"     onchange="onFilterRisco()">
+                        <option value="">Todos os riscos</option>
+                        <option value="BAIXO RISCO">Baixo Risco</option>
+                        <option value="ALTO RISCO">Alto Risco</option>
+                    </select>
+                    <select class="filter-select" id="filterStatus" onchange="setFilter('status', this.value)">
+                        <option value="">Todos os status</option>
+                        <option value="fiscalizado">✅ Fiscalizado</option>
+                        <option value="pendente">⏳ Pendente</option>
+                    </select>
+                    <input class="form-input" type="date" id="filterDataInicio" onchange="setFilter('dataInicio', this.value)" style="width:auto;min-width:140px">
+                    <input class="form-input" type="date" id="filterDataFim"    onchange="setFilter('dataFim', this.value)"    style="width:auto;min-width:140px">
+                    <button class="btn btn-ghost btn-sm" onclick="resetEstabFilters()" style="border-radius:50px;padding:6px 14px;font-size:12px">↺ Resetar</button>
+                </div>
+                <div class="table-section" style="margin-top:20px">
+                    <div class="table-header">
+                        <h2>Estabelecimentos</h2>
+                        <div style="display:flex;gap:10px;align-items:center">
+                            <span class="count-badge" id="resultCount">0 resultados</span>
+                            <button class="btn btn-primary btn-sm" onclick="openAdd()">＋ Novo</button>
+                            <button class="btn btn-print   btn-sm" onclick="imprimirEstabelecimentos()">🖨️ Imprimir</button>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead><tr>
+                                <th>Nome Fantasia</th><th>Razão social/ proprietário</th><th>Endereço</th>
+                                <th>Localidade</th><th>Categoria</th><th>Risco</th><th>Status</th>
+                                <th>Licenciamento</th><th>Situação</th><th>Ações</th>
+                            </tr></thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">
+                        <div class="pagination-info" id="paginationInfo"></div>
+                        <div class="pagination-btns" id="paginationBtns"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INATIVOS -->
+            <div class="page" id="page-inativos">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input class="search-input" id="searchInativos" type="text"
+                        placeholder="Buscar estabelecimento inativo..."
+                        oninput="renderInativos()">
+                    <button class="search-clear" onclick="document.getElementById('searchInativos').value='';renderInativos()">✕</button>
+                </div>
+                <div class="table-section" style="margin-top:20px">
+                    <div class="table-header">
+                        <h2>🚫 Estabelecimentos Inativos</h2>
+                        <div style="display:flex;gap:10px;align-items:center">
+                            <span class="count-badge" id="inativosCount">0 resultados</span>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead><tr>
+                                <th>Nome Fantasia</th><th>Razão social/ proprietário</th><th>Endereço</th>
+                                <th>Localidade</th><th>Categoria</th><th>Risco</th>
+                                <th>Licenciamento</th><th>Situação</th><th>Ações</th>
+                            </tr></thead>
+                            <tbody id="inativosTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">
+                        <div class="pagination-info" id="inativosPaginationInfo"></div>
+                        <div class="pagination-btns" id="inativosPaginationBtns"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CRONOGRAMA -->
+            <div class="page" id="page-cronograma">
+                <div class="glass-card" style="padding:24px;margin-bottom:20px">
+                    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+                        <h2 style="font-family:'Playfair Display',serif;font-size:20px">📅 Cronograma Mensal de Fiscalização</h2>
+                        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                            <select class="form-select" id="cronogramaMes" onchange="renderCronograma()" style="width:auto;min-width:130px">
+                                <option value="1">01 - Janeiro</option><option value="2">02 - Fevereiro</option>
+                                <option value="3">03 - Março</option><option value="4">04 - Abril</option>
+                                <option value="5">05 - Maio</option><option value="6">06 - Junho</option>
+                                <option value="7">07 - Julho</option><option value="8">08 - Agosto</option>
+                                <option value="9">09 - Setembro</option><option value="10">10 - Outubro</option>
+                                <option value="11">11 - Novembro</option><option value="12">12 - Dezembro</option>
+                            </select>
+                            <select class="form-select" id="cronogramaAno" onchange="renderCronograma()" style="width:auto;min-width:100px"></select>
+                            <button class="btn btn-primary btn-sm" id="btnSalvarCronograma" onclick="salvarCronograma()">💾 Salvar</button>
+                            <button class="btn btn-print   btn-sm" onclick="imprimirCronograma()">🖨️ Imprimir</button>
+                            <span style="font-size:11px;color:var(--text-muted)" id="cronoStatusMsg">Edite os campos e clique em Salvar</span>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead><tr>
+                                <th style="width:60px;text-align:center">Dia</th>
+                                <th style="width:auto">Tópicos</th>
+                            </tr></thead>
+                            <tbody id="cronogramaTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEGISLAÇÃO -->
+            <div class="page" id="page-legislacao">
+                <div class="glass-card" style="padding:24px;margin-bottom:20px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+                        <h2 style="font-family:'Playfair Display',serif;font-size:20px">📚 Biblioteca de Legislação</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openAddLegislacao()">＋ Novo Documento</button>
+                    </div>
+                    <div id="legislacaoList"></div>
+                </div>
+            </div>
+
+            <!-- CONFIGURAÇÕES -->
+            <div class="page" id="page-configuracoes">
+                <div class="config-sections">
+
+                    <div class="config-card">
+                        <h3>📍 Localidades</h3>
+                        <p>Gerencie as localidades disponíveis para seleção nos cadastros e filtros</p>
+                        <div class="input-group" style="margin-bottom:16px">
+                            <input class="form-input" id="newBairroName" placeholder="Nome da localidade...">
+                            <button class="btn btn-primary" onclick="addBairro()">+ Adicionar</button>
+                        </div>
+                        <div class="bairro-tags" id="bairroTagList"></div>
+                    </div>
+
+                    <!-- Card de Gerenciamento de Usuários -->
+                    <div class="config-card" id="usersManagementContainer"></div>
+
+                    <!-- NOVO CARD: Trocar Usuário (agora com solicitação de senha) -->
+                    <div class="config-card">
+                        <h3>👤 Trocar Usuário</h3>
+                        <p>Altere o usuário que está utilizando o sistema neste momento.</p>
+                        <button class="btn btn-primary" onclick="promptChangeUser()">
+                            🔄 Trocar Usuário
+                        </button>
+                    </div>
+
+                    <!-- NOVO CARD: Configurações do Alvará -->
+                    <div class="config-card">
+                        <h3>📄 Configurações do Alvará</h3>
+                        <p>Defina os nomes e portarias que aparecerão no rodapé do Alvará Sanitário.</p>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Secretária Municipal de Saúde</label>
+                                <input class="form-input" id="configSecretaria" placeholder="Nome da Secretária">
+                            </div>
+                            <div class="form-group">
+                                <label>Portaria da Secretária</label>
+                                <input class="form-input" id="configPortariaSecretaria" placeholder="Ex: PORT. 005, DE 02 DE JANEIRO DE 2025">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Coordenadora da VISA</label>
+                                <input class="form-input" id="configCoordenadora" placeholder="Nome da Coordenadora">
+                            </div>
+                            <div class="form-group">
+                                <label>Portaria da Coordenadora</label>
+                                <input class="form-input" id="configPortariaCoordenadora" placeholder="Ex: PORT. 256, DE 05 DE FEVEREIRO DE 2025">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="salvarConfigAlvaraUI()">💾 Salvar</button>
+                        <span id="configAlvaraStatus" style="margin-left:12px;font-size:12px;color:var(--text-muted)"></span>
+                    </div>
+
+                    <div class="config-card">
+                        <h3>💾 Backup Universal do Sistema</h3>
+                        <p>Realiza backup de <strong>todos os dados hospedados</strong>: estabelecimentos ativos, inativos e configurações — em um único arquivo JSON.</p>
+                        <div style="margin-top:18px">
+                            <div style="font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">📤 Exportar</div>
+                            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+                                <button class="btn btn-primary" onclick="backupData()">⬇️ Exportar Backup Completo</button>
+                                <span style="font-size:12px;color:var(--text-muted)">Gera um <code>.json</code> com todos os dados do sistema</span>
+                            </div>
+                        </div>
+                        <div style="margin-top:18px">
+                            <div style="font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">📥 Importar</div>
+                            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+                                <button class="btn btn-ghost" onclick="importBackup()">⬆️ Importar Backup</button>
+                                <span style="font-size:12px;color:var(--text-muted)">Restaura um backup <code>.json</code> exportado anteriormente</span>
+                            </div>
+                        </div>
+                        <input type="file" id="importFile" accept=".json" style="display:none" onchange="doImport(event)">
+                        <div id="backupImportResult" style="display:none;margin-top:16px;padding:14px 16px;border-radius:var(--radius-sm);font-size:13px;line-height:1.7"></div>
+                        <div style="margin-top:14px;font-size:13px;color:var(--text-muted)" id="configStats"></div>
+                    </div>
+
+                    <div class="config-card">
+                        <h3>🔍 Validação de CPF/CNPJ</h3>
+                        <p>Controle se o campo CPF/CNPJ é obrigatório e validado no cadastro de estabelecimentos.</p>
+                        <div class="switch-row">
+                            <div>
+                                <div class="switch-label">CPF/CNPJ obrigatório</div>
+                                <div class="switch-sub">Exige CPF ou CNPJ válido para salvar</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="switchCpfObrigatorio" onchange="handleSwitchChange(this, 'cpfObrigatorio')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="config-card">
+                        <h3>⏳ Prazo de Validade da Fiscalização</h3>
+                        <p>Defina em quantos meses, a partir da data da última fiscalização, o estabelecimento continua sendo considerado <strong>"Fiscalizado"</strong> (em dia). Após esse período, o status muda para <strong>"Pendente"</strong>.</p>
+                        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <label for="inputMesesValidade" style="font-weight:600;font-size:14px;">Meses:</label>
+                                <input type="number" id="inputMesesValidade" min="1" max="60" value="4" 
+                                       style="width:80px;padding:6px 10px;border:1.5px solid var(--border-solid);border-radius:6px;font-size:14px;">
+                            </div>
+                            <button class="btn btn-primary" onclick="saveMesesValidade()">💾 Salvar prazo</button>
+                            <span style="font-size:12px;color:var(--text-muted);">(valor atual: <strong id="currentMesesValidade">4</strong> meses)</span>
+                        </div>
+                    </div>
+
+                    <div class="config-card">
+                        <h3>🗑️ Exclusão de Inativos</h3>
+                        <p>Permite excluir permanentemente estabelecimentos desativados. <strong>Atenção:</strong> ação irreversível.</p>
+                        <div class="switch-row">
+                            <div>
+                                <div class="switch-label">Permitir exclusão permanente</div>
+                                <div class="switch-sub">Habilita opção de exclusão definitiva na aba de Inativos</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="switchPermitirExclusao" onchange="handleSwitchChange(this, 'permitirExclusao')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="config-card">
+                        <h3>🔐 Alterar Senha</h3>
+                        <p>Altere a sua senha de acesso ao sistema.</p>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nova Senha</label>
+                                <input type="password" class="form-input" id="newPasswordAdmin" placeholder="Mínimo 6 caracteres">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirmar Senha</label>
+                                <input type="password" class="form-input" id="confirmPasswordAdmin" placeholder="Repita a nova senha">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="margin-top:16px" onclick="changeAdminPassword()">🔒 Alterar Senha</button>
+                    </div>
+
+                    <div class="config-card">
+                        <h3>🚪 Sair do Sistema</h3>
+                        <p>Encerre sua sessão atual e volte para a tela de login.</p>
+                        <button class="btn btn-danger" style="margin-top:16px" onclick="doLogout()">🚪 Sair do sistema</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FISCALIZAÇÕES -->
+            <div class="page" id="page-fiscalizacoes">
+                <div class="glass-card" style="padding:24px;margin-bottom:20px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+                        <h2 style="font-family:'Playfair Display',serif;font-size:20px">📋 Registro de Fiscalizações</h2>
+                        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                            <span class="count-badge" id="fiscalizacoesCount">0 registros</span>
+                            <button class="btn btn-primary btn-sm" onclick="openAddFiscalizacao()">＋ Nova Fiscalização</button>
+                            <button class="btn btn-print   btn-sm" onclick="imprimirFiscalizacoes()">🖨️ Imprimir</button>
+                        </div>
+                    </div>
+                    <div class="search-container" style="margin-bottom:18px">
+                        <span class="search-icon">🔍</span>
+                        <input class="search-input" id="searchFiscalizacoes" type="text"
+                            placeholder="Buscar por estabelecimento, fiscal, tipo..."
+                            oninput="renderFiscalizacoes()">
+                        <button class="search-clear" onclick="document.getElementById('searchFiscalizacoes').value='';renderFiscalizacoes()">✕</button>
+                    </div>
+                    <div id="fiscalizacoesList"></div>
+                </div>
+            </div>
+
+        </div><!-- /.content -->
+    </main>
+
+    <!-- ====================================================
+         MODAIS
+    ==================================================== -->
+
+    <!-- Modal de Seleção de Usuário -->
+    <div class="overlay" id="modalSelectUser">
+        <div class="modal" style="max-width:400px">
+            <div class="modal-header">
+                <h2>👤 Selecionar Usuário</h2>
+                <button class="modal-close" onclick="closeModal('modalSelectUser')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Escolha o usuário que está utilizando o sistema:</p>
+                <div id="selectUserList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detalhe do estabelecimento -->
+    <div class="overlay" id="modalDetail">
+        <div class="modal" style="max-width:680px">
+            <div class="modal-header">
+                <div>
+                    <h2 id="detailNome">—</h2>
+                    <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap" id="detailBadges"></div>
+                </div>
+                <button class="modal-close" onclick="closeModal('modalDetail')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-grid" id="detailInfo"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adicionar / Editar estabelecimento -->
+    <div class="overlay" id="modalEstab">
+        <div class="modal" style="max-width:680px">
+            <div class="modal-header">
+                <div>
+                    <h2 id="estabModalTitle">＋ Novo Estabelecimento</h2>
+                    <div style="margin-top:4px;font-size:13px;color:var(--text-light)" id="estabModalSub">Preencha os dados do estabelecimento</div>
+                </div>
+                <button class="modal-close" onclick="closeModal('modalEstab')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group"><label>Nome Fantasia *</label><input class="form-input" id="estNome" placeholder="Ex: MERCADINHO BOA SORTE"></div>
+                    <div class="form-group"><label>Razão social/ proprietário *</label><input class="form-input" id="estRazao" placeholder="Ex: JOÃO DA SILVA ME"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>CPF/CNPJ <span id="cpfLabelObrigatorio" style="color:var(--danger)">*</span></label>
+                        <input class="form-input" id="estCpfCnpj" placeholder="Ex: 000.000.000-00 ou 00.000.000/0001-00">
+                    </div>
+                    <div class="form-group"><label>Licenciamento *</label>
+                        <select class="form-select" id="estLicenciamento">
+                            <option value="">Selecionar...</option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Endereço *</label><input class="form-input" id="estEndereco" placeholder="Ex: RUA DAS FLORES Nº 12"></div>
+                    <div class="form-group"><label>Localidade *</label>
+                        <select class="form-select" id="estBairro"><option value="">Selecionar...</option></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Categoria *</label><input class="form-input" id="estCategoria" list="catList" placeholder="Ex: MERCADINHO"><datalist id="catList"></datalist></div>
+                    <div class="form-group"><label>Tipo de Atividade *</label><input class="form-input" id="estAtividade" placeholder="Ex: VENDA DE ESTIVAS EM GERAL"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>CNAE *</label><input class="form-input" id="estCnae" placeholder="Ex: 4712-1/00"></div>
+                    <div class="form-group"><label>Classe de Risco *</label>
+                        <select class="form-select" id="estRisco">
+                            <option value="">Selecionar...</option>
+                            <option value="BAIXO RISCO">Baixo Risco</option>
+                            <option value="ALTO RISCO">Alto Risco</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Última Fiscalização *</label><input class="form-input" type="date" id="estLicenca"></div>
+                    <div class="form-group"><label>Órgão Licenciador</label>
+                        <input class="form-input" id="estOrgao" value="VISA/CAREIRO" readonly
+                            style="background:rgba(249,184,200,0.18);cursor:default;color:var(--rosa-dark);font-weight:600;border-color:var(--border-solid)">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;min-width:100%">
+                        <label>Descrição / Observações da Fiscalização</label>
+                        <textarea class="form-input" id="estFiscDescricao" rows="3" placeholder="Descreva observações da fiscalização..."></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+                    <button class="btn btn-ghost"   onclick="closeModal('modalEstab')">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveEstab()">💾 Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmar ativação -->
+    <div class="overlay" id="modalConfirmActivate">
+        <div class="modal" style="max-width:420px">
+            <div class="modal-header" style="background:var(--success-bg)">
+                <h2 style="color:#2d7a4f">✅ Ativar Estabelecimento</h2>
+                <button class="modal-close" onclick="closeModal('modalConfirmActivate')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:15px;margin-bottom:6px">Tem certeza que deseja reativar:</p>
+                <p style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:16px" id="activateNomeLabel">—</p>
+                <p style="font-size:13px;color:var(--text-muted);margin-bottom:22px">O estabelecimento voltará a aparecer na listagem de ativos.</p>
+                <div style="display:flex;gap:10px;justify-content:flex-end">
+                    <button class="btn btn-ghost"   onclick="closeModal('modalConfirmActivate')">Cancelar</button>
+                    <button class="btn btn-success" onclick="confirmActivate()">✅ Ativar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmar desativação -->
+    <div class="overlay" id="modalConfirmDel">
+        <div class="modal" style="max-width:420px">
+            <div class="modal-header" style="background:var(--warning-bg)">
+                <h2 style="color:#7a4e00">🚫 Desativar Estabelecimento</h2>
+                <button class="modal-close" onclick="closeModal('modalConfirmDel')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:15px;margin-bottom:6px">Tem certeza que deseja desativar:</p>
+                <p style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:16px" id="delNomeLabel">—</p>
+                <p style="font-size:13px;color:var(--text-muted);margin-bottom:22px">O estabelecimento será movido para a aba <strong>Inativos</strong>. Você poderá reativá-lo a qualquer momento.</p>
+                <div style="display:flex;gap:10px;justify-content:flex-end">
+                    <button class="btn btn-ghost"   onclick="closeModal('modalConfirmDel')">Cancelar</button>
+                    <button class="btn btn-amarelo" onclick="confirmDeactivate()">🚫 Desativar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmar exclusão de localidade -->
+    <div class="overlay" id="modalConfirmDelBairro">
+        <div class="modal" style="max-width:420px">
+            <div class="modal-header" style="background:var(--warning-bg)">
+                <h2 style="color:#7a4e00">🗺️ Excluir Localidade</h2>
+                <button class="modal-close" onclick="closeModal('modalConfirmDelBairro')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:15px;margin-bottom:6px">Tem certeza que deseja excluir a localidade:</p>
+                <p style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:16px" id="delBairroLabel">—</p>
+                <p style="font-size:13px;color:var(--text-muted);margin-bottom:22px">Os cadastros existentes não serão alterados.</p>
+                <div style="display:flex;gap:10px;justify-content:flex-end">
+                    <button class="btn btn-ghost"  onclick="closeModal('modalConfirmDelBairro')">Cancelar</button>
+                    <button class="btn btn-danger" onclick="confirmRemoveBairro()">🗑️ Excluir localidade</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adicionar / Editar legislação -->
+    <div class="overlay" id="modalLegislacao">
+        <div class="modal" style="max-width:520px">
+            <div class="modal-header">
+                <h2 id="legModalTitle">＋ Novo Documento</h2>
+                <button class="modal-close" onclick="closeModal('modalLegislacao')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:14px"><label>Nome do Documento *</label><input class="form-input" id="legNome" placeholder="Ex: RDC nº 216/2004 — Boas Práticas"></div>
+                <div class="form-group" style="margin-bottom:14px"><label>Link (URL do Google Drive) *</label><input class="form-input" id="legLink" placeholder="https://drive.google.com/..."></div>
+                <div class="form-group" style="margin-bottom:14px"><label>Categoria</label><input class="form-input" id="legCategoria" placeholder="Ex: Resolução, Lei, Portaria, Norma Técnica..."></div>
+                <input type="hidden" id="legEditId">
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+                    <button class="btn btn-ghost"   onclick="closeModal('modalLegislacao')">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveLegislacao()">💾 Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Termos de uso -->
+    <div class="overlay" id="modalTermos" style="z-index:10000">
+        <div class="modal" style="max-width:560px;text-align:center">
+            <div class="modal-header" style="background:var(--rosa-soft);display:block;text-align:center">
+                <div style="width:50px;height:50px;margin:0 auto 10px;border-radius:14px;background:var(--rosa-dark);display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 16px rgba(244,138,171,0.4)">📄</div>
+                <h2 style="font-size:18px">Termos de Uso e Privacidade</h2>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:4px">Você precisa aceitar os termos para continuar</p>
+            </div>
+            <div class="modal-body" style="text-align:left">
+                <p style="font-size:13px;color:var(--text-light);margin-bottom:16px">Antes de acessar o sistema <strong>CADVISA</strong>, leia atentamente os documentos abaixo. Ao clicar em <strong>"Li e aceito"</strong>, você declara que leu, compreendeu e concorda integralmente com ambos.</p>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+                    <a href="termo-de-uso.html" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(255,255,255,0.75);border:1.5px solid var(--border-solid);border-radius:var(--radius-sm);text-decoration:none;color:var(--text)">
+                        <span style="font-size:22px">📜</span>
+                        <div style="flex:1"><div style="font-weight:700;font-size:14px">Termo de Uso</div><div style="font-size:11px;color:var(--text-muted)">Regras de cessão, uso e desativação do sistema</div></div>
+                        <span style="font-size:18px;color:var(--rosa-dark)">🔗</span>
+                    </a>
+                    <a href="politica-de-privacidade.html" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(255,255,255,0.75);border:1.5px solid var(--border-solid);border-radius:var(--radius-sm);text-decoration:none;color:var(--text)">
+                        <span style="font-size:22px">🔒</span>
+                        <div style="flex:1"><div style="font-weight:700;font-size:14px">Política de Privacidade</div><div style="font-size:11px;color:var(--text-muted)">Como seus dados e os de terceiros são tratados</div></div>
+                        <span style="font-size:18px;color:var(--rosa-dark)">🔗</span>
+                    </a>
+                </div>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="aceitarTermos()" style="min-width:160px">✅ Li e aceito</button>
+                    <button class="btn btn-danger"  onclick="rejeitarTermos()" style="min-width:160px">❌ Rejeito e sair</button>
+                </div>
+                <p style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:14px">Ao aceitar, você concorda com o <strong>Termo de Uso</strong> e a <strong>Política de Privacidade</strong> do sistema CADVISA.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verificação de senha administrativa -->
+    <div class="overlay" id="modalPasswordPrompt">
+        <div class="modal" style="max-width:400px">
+            <div class="modal-header">
+                <h2>🔐 Verificação de Senha</h2>
+                <button class="modal-close" onclick="closeModal('modalPasswordPrompt');cancelPasswordAction()">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:14px;margin-bottom:12px;color:var(--text)">Digite sua senha administrativa para confirmar a alteração.</p>
+                <input type="password" class="form-input" id="promptPasswordInput" placeholder="Senha"
+                    autocomplete="current-password" onkeydown="if(event.key==='Enter')confirmPasswordAction()">
+                <div id="promptPasswordError" style="display:none;color:var(--danger);font-size:13px;margin-top:8px"></div>
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+                    <button class="btn btn-ghost"   onclick="cancelPasswordAction()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="confirmPasswordAction()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exclusão permanente -->
+    <div class="overlay" id="modalConfirmPermanentDelete">
+        <div class="modal" style="max-width:420px">
+            <div class="modal-header" style="background:var(--danger-bg)">
+                <h2 style="color:var(--danger)">⚠️ Exclusão Permanente</h2>
+                <button class="modal-close" onclick="closeModal('modalConfirmPermanentDelete')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:15px;margin-bottom:6px">Tem certeza que deseja <strong>excluir permanentemente</strong>:</p>
+                <p style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:16px" id="permanentDeleteNomeLabel">—</p>
+                <p style="font-size:13px;color:var(--danger);margin-bottom:22px">Esta ação é <strong>irreversível</strong>. O estabelecimento será removido de todos os registros do sistema.</p>
+                <div style="display:flex;gap:10px;justify-content:flex-end">
+                    <button class="btn btn-ghost"  onclick="closeModal('modalConfirmPermanentDelete')">Cancelar</button>
+                    <button class="btn btn-danger" onclick="confirmPermanentDelete()">🗑️ Excluir permanentemente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adicionar / Editar fiscalização -->
+    <div class="overlay" id="modalFiscalizacao">
+        <div class="modal" style="max-width:560px">
+            <div class="modal-header">
+                <h2 id="fiscModalTitle">＋ Nova Fiscalização</h2>
+                <button class="modal-close" onclick="closeModal('modalFiscalizacao')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:14px">
+                    <label>Selecionar Estabelecimento</label>
+                    <select class="form-select" id="fiscEstabelecimentoSel" onchange="onFiscalizacaoSelChange()">
+                        <option value="">Selecionar estabelecimento...</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:14px">
+                    <label>Nome do Estabelecimento *</label>
+                    <input class="form-input" id="fiscEstabelecimento" placeholder="Nome fantasia do estabelecimento">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo de Ação *</label>
+                        <select class="form-select" id="fiscTipo">
+                            <option value="">Selecionar...</option>
+                            <option value="Vistoria">Vistoria</option>
+                            <option value="Notificação">Notificação</option>
+                            <option value="Autuação">Autuação</option>
+                            <option value="Interdição">Interdição</option>
+                            <option value="Orientação">Orientação</option>
+                            <option value="Reinspeção">Reinspeção</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data *</label>
+                        <input class="form-input" type="date" id="fiscData">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:14px">
+                    <label>Fiscal Responsável</label>
+                    <input class="form-input" id="fiscFiscal" placeholder="Nome do fiscal">
+                </div>
+                <div class="form-group" style="margin-bottom:14px">
+                    <label>Descrição / Observações</label>
+                    <textarea class="form-input" id="fiscDescricao" rows="3"
+                        placeholder="Descreva a ação realizada, irregularidades encontradas, etc."></textarea>
+                </div>
+                <input type="hidden" id="fiscEditId">
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+                    <button class="btn btn-ghost"   onclick="closeModal('modalFiscalizacao')">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveFiscalizacao()">💾 Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ====================================================
+         JS Modular
+    ==================================================== -->
+    <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/estabelecimentos.js"></script>
+    <script src="js/fiscalizacoes.js"></script>
+    <script src="js/pages.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>

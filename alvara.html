@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Alvará Sanitário 2026 - Digital</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandPink: '#E91E63',
+            brandPurple: '#BA68C8',
+            brandYellow: '#FFD54F',
+            brandBlue: '#29B6F6',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* ========== ESTILOS GERAIS ========== */
+    .document-size {
+      width: 297mm;
+      height: 210mm;
+      min-width: 297mm;
+      min-height: 210mm;
+      max-width: 297mm;
+      max-height: 210mm;
+      overflow: hidden;
+    }
+    .document-bg {
+      background-image: url('image.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      background-color: #f3f4f6;
+      font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+      flex-direction: column;
+      gap: 20px;
+    }
+    /* ========== IMPRESSÃO ========== */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        /* color-adjust removido por ser obsoleto */
+      }
+      body {
+        background: white;
+        margin: 0;
+        padding: 0;
+        display: block;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .form-container {
+        display: none !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+        bleed: 0;
+      }
+      .document-size {
+        width: 297mm;
+        height: 210mm;
+        min-width: 297mm;
+        min-height: 210mm;
+        max-width: 297mm;
+        max-height: 210mm;
+        box-shadow: none !important;
+        margin: 0 auto;
+      }
+      .shadow-2xl {
+        box-shadow: none !important;
+      }
+      .btn-acao-group {
+        display: none !important;
+      }
+      .pagina-extra {
+        box-shadow: none !important;
+        margin: 0 auto;
+        page-break-before: always;
+        border: 1px solid #333 !important;
+      }
+    }
+    /* ========== FORMULÁRIO ========== */
+    .form-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      width: 680px;
+      max-width: 96vw;
+      margin: 0 auto;
+    }
+    .form-container label {
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.2rem;
+      display: block;
+      font-size: 0.9rem;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 0.6rem;
+      font-size: 0.9rem;
+      transition: border 0.2s;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .form-container input:focus {
+      outline: none;
+      border-color: #BA68C8;
+      box-shadow: 0 0 0 3px rgba(186,104,200,0.2);
+    }
+    .form-container input.valid {
+      border-color: #22c55e !important;
+      background-color: #f0fdf4 !important;
+    }
+    .form-container input.invalid {
+      border-color: #ef4444 !important;
+      background-color: #fef2f2 !important;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1rem;
+    }
+    .form-grid .full-width {
+      grid-column: 1 / -1;
+    }
+    /* ========== BOTÕES PRINCIPAIS ========== */
+    .btn-gerar {
+      background: linear-gradient(135deg, #E91E63, #BA68C8);
+      color: white;
+      font-weight: bold;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: transform 0.1s;
+      width: 100%;
+      letter-spacing: 0.5px;
+    }
+    .btn-gerar:hover {
+      transform: scale(1.01);
+    }
+    .btn-acao-group {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 20;
+    }
+    .btn-acao {
+      background: rgba(0,0,0,0.04);
+      color: #475569;
+      border: 1px solid transparent;
+      border-radius: 0.5rem;
+      padding: 0.35rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      font-size: 1.25rem;
+      transition: background 0.2s, border-color 0.2s;
+      line-height: 1;
+    }
+    .btn-acao:hover {
+      background: rgba(0,0,0,0.1);
+      border-color: #cbd5e1;
+    }
+    .btn-secundario {
+      background: #e2e8f0;
+      color: #1e293b;
+      font-weight: 600;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.9rem;
+    }
+    .btn-secundario:hover {
+      background: #cbd5e1;
+    }
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.85rem;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+    .btn-editar {
+      background: #3b82f6;
+      color: white;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.85rem;
+    }
+    .btn-editar:hover {
+      background: #2563eb;
+    }
+    .btn-cancelar {
+      background: #f59e0b;
+      color: white;
+      font-weight: 600;
+      padding: 0.6rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+      display: inline-block;
+      width: 100%;
+      font-size: 0.95rem;
+    }
+    .btn-cancelar:hover {
+      background: #d97706;
+    }
+    .btn-toggle-pagina {
+      background: #8b5cf6;
+      color: white;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    .btn-toggle-pagina:hover {
+      background: #7c3aed;
+    }
+    .btn-toggle-pagina.ativa {
+      background: #ef4444;
+    }
+    .btn-toggle-pagina.ativa:hover {
+      background: #dc2626;
+    }
+    .btn-limpar {
+      background: #94a3b8;
+      color: white;
+      font-weight: 600;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    .btn-limpar:hover {
+      background: #64748b;
+    }
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .btn-group .btn-secundario {
+      flex: 1;
+      text-align: center;
+    }
+    .btn-revogar {
+      background: #f59e0b;
+      color: white;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.85rem;
+    }
+    .btn-revogar:hover {
+      background: #d97706;
+    }
+    .btn-ativar {
+      background: #22c55e;
+      color: white;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.85rem;
+    }
+    .btn-ativar:hover {
+      background: #16a34a;
+    }
+    .btn-visualizar {
+      background: #8b5cf6;
+      color: white;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.85rem;
+    }
+    .btn-visualizar:hover {
+      background: #7c3aed;
+    }
+    /* ========== LISTA ========== */
+    #listaContainer {
+      background: white;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      width: 920px;
+      max-width: 96vw;
+      margin: 0 auto;
+      display: none;
+    }
+    .abas {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .aba-btn {
+      background: #f1f5f9;
+      border: none;
+      padding: 0.4rem 1.2rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+    .aba-btn.ativa {
+      background: #BA68C8;
+      color: white;
+    }
+    .aba-btn:hover:not(.ativa) {
+      background: #e2e8f0;
+    }
+    .lista-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .lista-item:last-child {
+      border-bottom: none;
+    }
+    .lista-item.revogado {
+      background-color: #fef2f2;
+      border-left: 4px solid #ef4444;
+    }
+    .lista-item .info {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .lista-item .acoes {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .badge-revogado {
+      background: #ef4444;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.6rem;
+      border-radius: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    /* Paginação */
+    .paginacao {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+    }
+    .paginacao button {
+      background: #f1f5f9;
+      border: none;
+      padding: 0.3rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .paginacao button:hover:not(:disabled) {
+      background: #cbd5e1;
+    }
+    .paginacao button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .paginacao span {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    /* ========== PÁGINA EXTRA ========== */
+    .pagina-extra {
+      width: 297mm;
+      height: 210mm;
+      min-width: 297mm;
+      min-height: 210mm;
+      max-width: 297mm;
+      max-height: 210mm;
+      background: white;
+      padding: 2rem 3rem;
+      box-sizing: border-box;
+      display: none;
+      margin: 0 auto;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      font-family: 'Inter', sans-serif;
+      page-break-before: always;
+      border: 1px solid #333;
+    }
+    .pagina-extra .conteudo {
+      font-size: 16px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      color: #1e293b;
+      margin-top: 0;
+    }
+    /* ========== MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-overlay.visible {
+      display: flex;
+    }
+    .modal-box {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      max-width: 90vw;
+      width: 800px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .modal-box label {
+      font-weight: 600;
+      color: #1e293b;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    .modal-box textarea {
+      flex: 1;
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      resize: none;
+      font-family: inherit;
+      min-height: 0;
+    }
+    .modal-box textarea:focus {
+      outline: none;
+      border-color: #BA68C8;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+    .modal-actions button {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-actions .btn-salvar {
+      background: #8b5cf6;
+      color: white;
+    }
+    .modal-actions .btn-salvar:hover {
+      background: #7c3aed;
+    }
+    .modal-actions .btn-cancelar-modal {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    .modal-actions .btn-cancelar-modal:hover {
+      background: #cbd5e1;
+    }
+    /* ========== UTILITÁRIOS ========== */
+    .hidden {
+      display: none !important;
+    }
+    .mb-1 {
+      margin-bottom: 0.25rem !important;
+    }
+    .mt-2 {
+      margin-top: 0.5rem !important;
+    }
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #BA68C8;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- ===== FIREBASE ===== -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+
+  <!-- ===== FORMULÁRIO ===== -->
+  <div class="form-container no-print" id="formContainer">
+    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">Preencha os dados do Alvará</h2>
+    <div>
+
+      <!-- 🔍 Busca por estabelecimento (opcional) - largura total -->
+      <div class="mb-2">
+        <label for="buscaEstabelecimento">🔎 Buscar Estabelecimento (opcional)</label>
+        <input id="buscaEstabelecimento" list="estabOptions" placeholder="Digite o nome do estabelecimento..." type="text" autocomplete="off" />
+        <datalist id="estabOptions"></datalist>
+      </div>
+
+      <!-- Grid com duas colunas para os campos -->
+      <div class="form-grid">
+        <div>
+          <label for="nome">Nome</label>
+          <input id="nome" placeholder="Ex: AMAZON BOTO" type="text" />
+        </div>
+        <div>
+          <label for="razao">Razão Social</label>
+          <input id="razao" placeholder="Ex: FJL MARTIN - ME" type="text" />
+        </div>
+        <div>
+          <label for="endereco">Endereço</label>
+          <input id="endereco" placeholder="Ex: Lago do Boto..." type="text" />
+        </div>
+        <div>
+          <label for="atividade">Atividade</label>
+          <input id="atividade" placeholder="Ex: POUSADA DE PESCA..." type="text" />
+        </div>
+        <div>
+          <label for="cnpj">CNPJ/CPF/RG</label>
+          <input id="cnpj" placeholder="Digite apenas números" type="text" maxlength="18" />
+        </div>
+        <div>
+          <label for="dataEmissao">Data de Emissão</label>
+          <input id="dataEmissao" type="date" />
+        </div>
+      </div>
+
+      <!-- Botão para adicionar página extra (largura total) com espaçamento superior -->
+      <div class="mt-2 mb-3">
+        <button class="btn-toggle-pagina" id="btnTogglePagina" onclick="togglePaginaExtra()">
+          <span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">note_add</span> Adicionar página de observações
+        </button>
+      </div>
+
+      <button class="btn-gerar" id="btnGerar" onclick="gerarOuAtualizar()">Gerar Alvará</button>
+
+      <div id="divCancelar" style="display: none; margin-top: 0.5rem;">
+        <button class="btn-cancelar" onclick="cancelarEdicao()">Cancelar Edição</button>
+      </div>
+
+      <!-- Botão Limpar Campos -->
+      <div class="mt-2">
+        <button class="btn-limpar" onclick="limparCampos()">
+          <span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">cleaning_services</span> Limpar Campos
+        </button>
+      </div>
+
+      <div class="btn-group mt-3">
+        <button class="btn-secundario" onclick="mostrarLista()">
+          <span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">list</span> Ver Alvarás
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LISTA ===== -->
+  <div id="listaContainer" class="no-print">
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-xl font-bold text-gray-800">Lista de Alvarás</h2>
+      <button class="btn-secundario" onclick="voltarFormulario()">Voltar</button>
+    </div>
+    <div id="abasContainer" class="abas"></div>
+    <div id="listaAlvaras">
+      <p class="text-gray-500 text-center">Carregando...</p>
+    </div>
+    <div id="paginacaoContainer" class="paginacao" style="display:none;"></div>
+  </div>
+
+  <!-- ===== MODAL PARA OBSERVAÇÕES ===== -->
+  <div class="modal-overlay no-print" id="modalObservacoes">
+    <div class="modal-box">
+      <label for="modalTexto">Edite o conteúdo da página extra:</label>
+      <textarea id="modalTexto" placeholder="Digite as observações..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-cancelar-modal" onclick="fecharModal(false)">Cancelar</button>
+        <button class="btn-salvar" onclick="salvarObservacoes()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DOCUMENTO PRINCIPAL (PRÉVIA) ===== -->
+  <main class="relative bg-white shadow-2xl flex overflow-hidden print-border document-size document-bg hidden" id="document-root">
+    <div class="btn-acao-group no-print">
+      <button class="btn-acao" onclick="window.print()" title="Imprimir">
+        <span class="material-symbols-outlined">print</span>
+      </button>
+      <button class="btn-acao" onclick="voltarParaCadastro()" title="Voltar ao cadastro">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+    </div>
+
+    <section class="w-1/3 relative flex flex-col items-center pt-10 px-6 border-r border-gray-50"></section>
+    <section class="flex-1 pl-12 pr-[100px] py-20 flex flex-col relative">
+      <div class="flex justify-center mb-10">
+        <div class="bg-brandPurple text-white px-56 py-3 rounded-lg text-3xl font-bold shadow-md" id="docNumber">
+          Nº 0000
+        </div>
+      </div>
+      <div class="space-y-2 text-gray-800 mb-6 mt-8">
+        <p class="text-[17px] leading-normal"><strong class="font-bold">Nome:</strong> <span class="font-normal" id="displayNome"></span></p>
+        <p class="text-[17px] leading-normal"><strong class="font-bold">Razão Social:</strong> <span class="font-normal" id="displayRazao"></span></p>
+        <p class="text-[17px] leading-normal"><strong class="font-bold">Endereço:</strong> <span class="font-normal" id="displayEndereco"></span></p>
+        <p class="text-[17px] leading-normal"><strong class="font-bold">Atividade:</strong> <span class="font-normal" id="displayAtividade"></span></p>
+        <p class="text-[17px] leading-normal"><strong class="font-bold">CNPJ/CPF/RG:</strong> <span class="font-normal" id="displayCnpj"></span></p>
+      </div>
+      <div class="text-[16px] text-gray-700 space-y-4 leading-relaxed mb-6">
+        <p>
+          A Renovação do Alvará deverá ser efetuada no período de 01/01 a 30/04 de cada ano, de acordo com as Leis:
+          Federal nº 6.437 de 20 de Agosto de 1977 e Lei Complementar nº 70 de 03 de Dezembro de 2009.
+        </p>
+        <p class="text-lg font-bold mt-8" id="dataAssinatura">
+          Careiro, <span></span>
+        </p>
+      </div>
+      <div class="mt-auto flex justify-between gap-16 text-center pt-20 border-t border-gray-100">
+        <div class="flex flex-col items-center text-center">
+          <p class="text-2xl font-normal text-gray-900" id="displaySecretaria">Nubia Lima Pereira</p>
+          <p class="text-xs uppercase text-black font-normal tracking-wider mt-1">Secretária Mun. de Saúde</p>
+          <p class="text-xs text-black font-normal" id="displayPortariaSecretaria">PORT. 005, DE 02 DE JANEIRO DE 2025</p>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <p class="text-2xl font-normal text-gray-900" id="displayCoordenadora">Gisele Matta de Souza</p>
+          <p class="text-xs uppercase text-black font-normal tracking-wider mt-1">Coordenadora de Visa Careiro</p>
+          <p class="text-xs text-black font-normal" id="displayPortariaCoordenadora">PORT. 256, DE 05 DE FEVEREIRO DE 2025</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== PÁGINA EXTRA (só aparece na prévia) ===== -->
+  <div class="pagina-extra" id="paginaExtra">
+    <div class="conteudo" id="conteudoExtra"></div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ============================================
+    //  CONSTANTES
+    // ============================================
+    const TEXTO_PADRAO_OBSERVACOES = `OBSERVAÇÕES:
+
+Este documento deverá ser afixado no estabelecimento, em local visível ao público.
+O presente documento poderá ser suspenso, cassado ou cancelado, a qualquer momento, por irregularidades no estabelecimento.
+
+ATIVIDADE(S) LICENCIADA(S):
+
+Aplicação de injetáveis;
+Aferição de pressão arterial;
+Aferição de glicose;
+Perfuração de lóbulo auricular;
+Dispensação de medicamentos contendo substâncias sujeitas ao controle especial – Portaria Nº 344, de 12 de maio de 1998;
+Exames rápido e teste laboratorial remoto – ECO.`;
+
+    const ITENS_POR_PAGINA = 11;
+
+    // ============================================
+    //  INICIALIZAÇÃO DO FIRESTORE
+    // ============================================
+    let db;
+    try {
+      db = firebase.firestore();
+      console.log('Firestore inicializado com sucesso.');
+    } catch (e) {
+      console.error('Erro ao inicializar o Firestore:', e);
+      alert('Não foi possível conectar ao Firebase. Verifique o arquivo firebase-config.js.');
+    }
+
+    // ============================================
+    //  ESTADO GLOBAL
+    // ============================================
+    let modoEdicao = false;
+    let idEdicao = null;
+    let numeroEdicao = null;
+    let anoEdicao = null;
+    let paginaExtraAtiva = false;
+    let conteudoObservacoes = '';
+    let alvarasCache = [];
+    let anoSelecionadoGlobal = null;
+    let paginaAtual = 1;
+
+    // Referências Firestore
+    const COLECAO_RAIZ = 'alvara';
+    const DOC_METADADOS = 'metadados';
+    const SUBCOL_ESTABELECIMENTOS = 'estabelecimentos';
+    const CONFIG_ALVARA_REF = db.collection('alvara').doc('config');
+
+    // ============================================
+    //  FUNÇÕES AUXILIARES
+    // ============================================
+    function formatarNumero(num) {
+      return String(num).padStart(4, '0');
+    }
+
+    function formatarData(dateString) {
+      if (!dateString) return '';
+      const partes = dateString.split('-');
+      const ano = partes[0];
+      const mes = parseInt(partes[1], 10) - 1;
+      const dia = parseInt(partes[2], 10);
+      const meses = [
+        'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+        'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
+      ];
+      return `${dia} de ${meses[mes]} de ${ano}`;
+    }
+
+    function aplicarMascaraCnpjCpf(input) {
+      let valor = input.value.replace(/\D/g, '');
+      if (valor.length <= 11) {
+        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+        valor = valor.replace(/(\d{3})(\d{2})$/, '$1-$2');
+      } else {
+        valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
+        valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+        valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
+        valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+      }
+      input.value = valor;
+    }
+
+    // ============================================
+    //  VALIDAÇÃO CPF/CNPJ
+    // ============================================
+    function validarCPF(cpf) {
+      cpf = cpf.replace(/\D/g, '');
+      if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+      let soma = 0, resto;
+      for (let i = 1; i <= 9; i++) soma += parseInt(cpf.charAt(i - 1)) * (11 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(9))) return false;
+      soma = 0;
+      for (let i = 1; i <= 10; i++) soma += parseInt(cpf.charAt(i - 1)) * (12 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      return resto === parseInt(cpf.charAt(10));
+    }
+
+    function validarCNPJ(cnpj) {
+      cnpj = cnpj.replace(/\D/g, '');
+      if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
+      let tam = cnpj.length - 2;
+      let num = cnpj.substring(0, tam);
+      const dig = cnpj.substring(tam);
+      let soma = 0, pos = tam - 7;
+      for (let i = tam; i >= 1; i--) {
+        soma += parseInt(num.charAt(tam - i)) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      let res = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (res != dig.charAt(0)) return false;
+      tam += 1;
+      num = cnpj.substring(0, tam);
+      soma = 0; pos = tam - 7;
+      for (let i = tam; i >= 1; i--) {
+        soma += parseInt(num.charAt(tam - i)) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      res = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      return res == dig.charAt(1);
+    }
+
+    // ============================================
+    //  CONSULTA CNPJ NA BRASILAPI
+    // ============================================
+    async function consultarCnpj(cnpj) {
+      const cnpjLimpo = cnpj.replace(/\D/g, '');
+      if (cnpjLimpo.length !== 14) return null;
+
+      try {
+        const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpjLimpo}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.warn('Erro na API BrasilAPI:', errorData);
+          return null;
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.warn('Erro na consulta CNPJ:', error);
+        return null;
+      }
+    }
+
+    // ============================================
+    //  OPERAÇÕES FIRESTORE (contadores por ano)
+    // ============================================
+    function getEstabelecimentosRef() {
+      return db.collection(COLECAO_RAIZ).doc(DOC_METADADOS).collection(SUBCOL_ESTABELECIMENTOS);
+    }
+
+    function getContadorRef(ano) {
+      return db.collection(COLECAO_RAIZ).doc('contadores').collection(String(ano)).doc('contador');
+    }
+
+    async function getProximoNumero(ano) {
+      if (!ano) throw new Error('Ano é obrigatório para gerar número.');
+      const ref = getContadorRef(ano);
+      try {
+        const result = await db.runTransaction(async (transaction) => {
+          const doc = await transaction.get(ref);
+          if (!doc.exists) {
+            transaction.set(ref, { ultimoNumero: 1 });
+            return 1;
+          } else {
+            const novo = doc.data().ultimoNumero + 1;
+            transaction.update(ref, { ultimoNumero: novo });
+            return novo;
+          }
+        });
+        return result;
+      } catch (error) {
+        console.error('Erro ao gerar próximo número para o ano', ano, error);
+        throw error;
+      }
+    }
+
+    async function getAlvaras() {
+      try {
+        const snapshot = await getEstabelecimentosRef()
+          .orderBy('ano', 'desc')
+          .get();
+        const lista = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          lista.push({
+            id: doc.id,
+            nome: data.nome || '',
+            razao: data.razao || '',
+            endereco: data.endereco || '',
+            atividade: data.atividade || '',
+            cnpj: data.cnpj || '',
+            dataEmissao: data.dataEmissao || '',
+            observacoes: data.observacoes || '',
+            numero: data.numero || 0,
+            ano: data.ano || null,
+            dataCriacao: data.dataCriacao || null,
+            revogado: data.revogado || false,
+          });
+        });
+        lista.sort((a, b) => {
+          if (a.ano !== b.ano) {
+            if (a.ano === null) return 1;
+            if (b.ano === null) return -1;
+            return b.ano - a.ano;
+          }
+          return a.numero - b.numero;
+        });
+        return lista;
+      } catch (error) {
+        console.error('Erro ao buscar alvarás:', error);
+        if (error.code === 'failed-precondition' || error.message.includes('index')) {
+          console.warn('Índice não encontrado. Buscando sem ordenação...');
+          const snapshot = await getEstabelecimentosRef().get();
+          const lista = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            lista.push({
+              id: doc.id,
+              nome: data.nome || '',
+              razao: data.razao || '',
+              endereco: data.endereco || '',
+              atividade: data.atividade || '',
+              cnpj: data.cnpj || '',
+              dataEmissao: data.dataEmissao || '',
+              observacoes: data.observacoes || '',
+              numero: data.numero || 0,
+              ano: data.ano || null,
+              dataCriacao: data.dataCriacao || null,
+              revogado: data.revogado || false,
+            });
+          });
+          lista.sort((a, b) => {
+            if (a.ano !== b.ano) {
+              if (a.ano === null) return 1;
+              if (b.ano === null) return -1;
+              return b.ano - a.ano;
+            }
+            return a.numero - b.numero;
+          });
+          return lista;
+        }
+        throw error;
+      }
+    }
+
+    async function salvarAlvara(dados, documentoId = null, numeroExistente = null, anoExistente = null) {
+      try {
+        if (documentoId) {
+          await getEstabelecimentosRef().doc(documentoId).update(dados);
+          return { numero: numeroExistente, ano: anoExistente };
+        } else {
+          const ano = dados.ano;
+          if (!ano) throw new Error('Ano não definido para novo alvará.');
+          const novoNumero = await getProximoNumero(ano);
+          dados.numero = novoNumero;
+          dados.dataCriacao = new Date().toISOString();
+          dados.revogado = dados.revogado || false;
+          const docRef = await getEstabelecimentosRef().add(dados);
+          return { numero: novoNumero, ano: ano, id: docRef.id };
+        }
+      } catch (error) {
+        console.error('Erro ao salvar alvará:', error);
+        alert('Erro ao salvar alvará. Verifique sua conexão.');
+        return null;
+      }
+    }
+
+    async function toggleRevogado(documentoId, revogado) {
+      try {
+        await getEstabelecimentosRef().doc(documentoId).update({ revogado: revogado });
+        await renderizarLista(anoSelecionadoGlobal);
+      } catch (error) {
+        console.error('Erro ao alternar revogado:', error);
+        alert('Erro ao atualizar status.');
+      }
+    }
+
+    async function buscarAlvaraPorId(id) {
+      try {
+        const doc = await getEstabelecimentosRef().doc(id).get();
+        if (!doc.exists) return null;
+        return { id: doc.id, ...doc.data() };
+      } catch (error) {
+        console.error('Erro ao buscar alvará:', error);
+        return null;
+      }
+    }
+
+    async function getConfigAlvara() {
+      try {
+        const doc = await CONFIG_ALVARA_REF.get();
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          return {
+            secretaria: 'Nubia Lima Pereira',
+            coordenadora: 'Gisele Matta de Souza',
+            portariaSecretaria: 'PORT. 005, DE 02 DE JANEIRO DE 2025',
+            portariaCoordenadora: 'PORT. 256, DE 05 DE FEVEREIRO DE 2025'
+          };
+        }
+      } catch (e) {
+        console.error('Erro ao buscar config alvara:', e);
+        return {
+          secretaria: 'Nubia Lima Pereira',
+          coordenadora: 'Gisele Matta de Souza',
+          portariaSecretaria: 'PORT. 005, DE 02 DE JANEIRO DE 2025',
+          portariaCoordenadora: 'PORT. 256, DE 05 DE FEVEREIRO DE 2025'
+        };
+      }
+    }
+
+    // ============================================
+    //  FUNÇÕES DA INTERFACE
+    // ============================================
+
+    function togglePaginaExtra() {
+      if (paginaExtraAtiva) {
+        paginaExtraAtiva = false;
+        conteudoObservacoes = '';
+        document.getElementById('btnTogglePagina').innerHTML =
+          '<span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">note_add</span> Adicionar página de observações';
+        document.getElementById('btnTogglePagina').classList.remove('ativa');
+        document.getElementById('paginaExtra').style.display = 'none';
+        document.getElementById('conteudoExtra').textContent = '';
+      } else {
+        const modal = document.getElementById('modalObservacoes');
+        const textarea = document.getElementById('modalTexto');
+        textarea.value = conteudoObservacoes || TEXTO_PADRAO_OBSERVACOES;
+        modal.classList.add('visible');
+      }
+    }
+
+    function fecharModal(salvo = false) {
+      document.getElementById('modalObservacoes').classList.remove('visible');
+      if (salvo) {
+        paginaExtraAtiva = true;
+        document.getElementById('btnTogglePagina').innerHTML =
+          '<span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">delete</span> Remover página de observações';
+        document.getElementById('btnTogglePagina').classList.add('ativa');
+      }
+    }
+
+    function salvarObservacoes() {
+      const textarea = document.getElementById('modalTexto');
+      const novoConteudo = textarea.value.trim();
+      if (!novoConteudo) {
+        alert('O conteúdo não pode estar vazio.');
+        return;
+      }
+      conteudoObservacoes = novoConteudo;
+      fecharModal(true);
+      document.getElementById('conteudoExtra').textContent = conteudoObservacoes;
+    }
+
+    function limparCampos() {
+      document.getElementById('nome').value = '';
+      document.getElementById('razao').value = '';
+      document.getElementById('endereco').value = '';
+      document.getElementById('atividade').value = '';
+      document.getElementById('cnpj').value = '';
+      document.getElementById('dataEmissao').value = '';
+      document.getElementById('buscaEstabelecimento').value = '';
+      document.getElementById('cnpj').classList.remove('valid', 'invalid');
+      if (paginaExtraAtiva) {
+        paginaExtraAtiva = false;
+        conteudoObservacoes = '';
+        document.getElementById('btnTogglePagina').innerHTML =
+          '<span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">note_add</span> Adicionar página de observações';
+        document.getElementById('btnTogglePagina').classList.remove('ativa');
+        document.getElementById('paginaExtra').style.display = 'none';
+        document.getElementById('conteudoExtra').textContent = '';
+      }
+      if (modoEdicao) {
+        cancelarEdicao();
+      }
+    }
+
+    // ===== RENDERIZAÇÃO DA LISTA COM ABAS E PAGINAÇÃO =====
+    async function renderizarLista(anoSelecionado = null, pagina = 1) {
+      const container = document.getElementById('listaAlvaras');
+      container.innerHTML = '<p class="text-gray-500 text-center">Carregando...</p>';
+
+      let alvaras;
+      try {
+        alvaras = await getAlvaras();
+        alvarasCache = alvaras;
+      } catch (error) {
+        console.error('Falha ao carregar lista:', error);
+        container.innerHTML = `<p class="text-red-500 text-center">Erro ao carregar lista: ${error.message}</p>`;
+        document.getElementById('abasContainer').innerHTML = '';
+        document.getElementById('paginacaoContainer').style.display = 'none';
+        return;
+      }
+
+      if (!alvaras || alvaras.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center">Nenhum alvará cadastrado.</p>';
+        document.getElementById('abasContainer').innerHTML = '';
+        document.getElementById('paginacaoContainer').style.display = 'none';
+        return;
+      }
+
+      const grupos = {};
+      alvaras.forEach(item => {
+        const ano = item.ano ? String(item.ano) : 'Sem ano';
+        if (!grupos[ano]) grupos[ano] = [];
+        grupos[ano].push(item);
+      });
+
+      const anos = Object.keys(grupos).sort((a, b) => {
+        if (a === 'Sem ano') return 1;
+        if (b === 'Sem ano') return -1;
+        return b.localeCompare(a);
+      });
+
+      const abasContainer = document.getElementById('abasContainer');
+      let abasHtml = '';
+      anos.forEach(ano => {
+        const ativa = (anoSelecionado === null && ano === anos[0]) || (ano === anoSelecionado) ? 'ativa' : '';
+        abasHtml += `<button class="aba-btn ${ativa}" data-ano="${ano}" onclick="selecionarAba('${ano}')">${ano}</button>`;
+      });
+      abasContainer.innerHTML = abasHtml;
+
+      const anoAtual = anoSelecionado || anos[0];
+      anoSelecionadoGlobal = anoAtual;
+      const itens = grupos[anoAtual] || [];
+      if (itens.length === 0) {
+        container.innerHTML = `<p class="text-gray-500 text-center">Nenhum alvará para o ano ${anoAtual}.</p>`;
+        document.getElementById('paginacaoContainer').style.display = 'none';
+        return;
+      }
+
+      const totalItens = itens.length;
+      const totalPaginas = Math.ceil(totalItens / ITENS_POR_PAGINA);
+      if (pagina > totalPaginas) pagina = totalPaginas;
+      if (pagina < 1) pagina = 1;
+      paginaAtual = pagina;
+
+      const inicio = (pagina - 1) * ITENS_POR_PAGINA;
+      const fim = Math.min(inicio + ITENS_POR_PAGINA, totalItens);
+      const paginaItens = itens.slice(inicio, fim);
+
+      let html = '';
+      paginaItens.forEach(item => {
+        const numFormatado = formatarNumero(item.numero);
+        const revogadoClass = item.revogado ? 'revogado' : '';
+        const badgeRevogado = item.revogado ? `<span class="badge-revogado">Revogado</span>` : '';
+        html += `
+          <div class="lista-item ${revogadoClass}">
+            <div class="info">
+              <span class="font-semibold text-brandPurple">Nº ${numFormatado}</span>
+              <span>${item.nome}</span>
+              ${badgeRevogado}
+            </div>
+            <div class="acoes">
+              <button class="btn-visualizar" onclick="visualizarPrevia('${item.id}')" title="Visualizar prévia">👁️</button>
+              <button class="btn-editar" onclick="editarAlvara('${item.id}')">Editar</button>
+              ${item.revogado
+                ? `<button class="btn-ativar" onclick="toggleRevogado('${item.id}', false)">Ativar</button>`
+                : `<button class="btn-revogar" onclick="toggleRevogado('${item.id}', true)">Revogar</button>`
+              }
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+
+      const pagContainer = document.getElementById('paginacaoContainer');
+      if (totalPaginas > 1) {
+        pagContainer.style.display = 'flex';
+        pagContainer.innerHTML = `
+          <button onclick="mudarPagina(${pagina - 1})" ${pagina <= 1 ? 'disabled' : ''}>Anterior</button>
+          <span>Página ${pagina} de ${totalPaginas}</span>
+          <button onclick="mudarPagina(${pagina + 1})" ${pagina >= totalPaginas ? 'disabled' : ''}>Próxima</button>
+        `;
+      } else {
+        pagContainer.style.display = 'none';
+      }
+    }
+
+    function mudarPagina(novaPagina) {
+      if (novaPagina < 1) return;
+      renderizarLista(anoSelecionadoGlobal, novaPagina);
+    }
+
+    function selecionarAba(ano) {
+      renderizarLista(ano, 1);
+    }
+
+    function mostrarLista() {
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('listaContainer').style.display = 'block';
+      renderizarLista();
+    }
+
+    function voltarFormulario() {
+      document.getElementById('listaContainer').style.display = 'none';
+      document.getElementById('formContainer').style.display = 'block';
+    }
+
+    function cancelarEdicao() {
+      modoEdicao = false;
+      idEdicao = null;
+      numeroEdicao = null;
+      anoEdicao = null;
+      document.getElementById('btnGerar').textContent = 'Gerar Alvará';
+      document.getElementById('divCancelar').style.display = 'none';
+      document.getElementById('formContainer').style.display = 'block';
+      document.getElementById('listaContainer').style.display = 'none';
+    }
+
+    function voltarParaCadastro() {
+      document.getElementById('document-root').classList.add('hidden');
+      document.getElementById('paginaExtra').style.display = 'none';
+      document.getElementById('formContainer').style.display = 'block';
+    }
+
+    async function visualizarPrevia(id) {
+      const item = await buscarAlvaraPorId(id);
+      if (!item) {
+        alert('Alvará não encontrado.');
+        return;
+      }
+      await exibirPrevia(item);
+    }
+
+    async function editarAlvara(id) {
+      const item = await buscarAlvaraPorId(id);
+      if (!item) {
+        alert('Alvará não encontrado.');
+        return;
+      }
+      document.getElementById('nome').value = item.nome || '';
+      document.getElementById('razao').value = item.razao || '';
+      document.getElementById('endereco').value = item.endereco || '';
+      document.getElementById('atividade').value = item.atividade || '';
+      document.getElementById('cnpj').value = item.cnpj || '';
+      document.getElementById('dataEmissao').value = item.dataEmissao || '';
+      document.getElementById('buscaEstabelecimento').value = '';
+      document.getElementById('cnpj').classList.remove('valid', 'invalid');
+
+      if (item.observacoes) {
+        conteudoObservacoes = item.observacoes;
+        paginaExtraAtiva = true;
+        document.getElementById('btnTogglePagina').innerHTML =
+          '<span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">delete</span> Remover página de observações';
+        document.getElementById('btnTogglePagina').classList.add('ativa');
+        document.getElementById('conteudoExtra').textContent = conteudoObservacoes;
+      } else {
+        if (paginaExtraAtiva) {
+          paginaExtraAtiva = false;
+          conteudoObservacoes = '';
+          document.getElementById('btnTogglePagina').innerHTML =
+            '<span class="material-symbols-outlined align-middle" style="font-size:1.1rem;">note_add</span> Adicionar página de observações';
+          document.getElementById('btnTogglePagina').classList.remove('ativa');
+          document.getElementById('conteudoExtra').textContent = '';
+        }
+      }
+
+      modoEdicao = true;
+      idEdicao = item.id;
+      numeroEdicao = item.numero;
+      anoEdicao = item.ano;
+      document.getElementById('btnGerar').textContent = 'Atualizar Alvará';
+      document.getElementById('divCancelar').style.display = 'block';
+
+      document.getElementById('listaContainer').style.display = 'none';
+      document.getElementById('formContainer').style.display = 'block';
+      document.getElementById('document-root').classList.add('hidden');
+      document.getElementById('paginaExtra').style.display = 'none';
+    }
+
+    // ============================================
+    //  AÇÃO PRINCIPAL (GERAR / ATUALIZAR)
+    // ============================================
+    async function gerarOuAtualizar() {
+      const nome = document.getElementById('nome').value.trim();
+      const razao = document.getElementById('razao').value.trim();
+      const endereco = document.getElementById('endereco').value.trim();
+      const atividade = document.getElementById('atividade').value.trim();
+      const cnpj = document.getElementById('cnpj').value.trim();
+      const dataEmissao = document.getElementById('dataEmissao').value;
+
+      if (!nome || !razao || !endereco || !atividade || !cnpj || !dataEmissao) {
+        alert('Por favor, preencha todos os campos obrigatórios, incluindo a data.');
+        return;
+      }
+
+      const ano = dataEmissao.split('-')[0];
+      if (!ano) {
+        alert('Data de emissão inválida.');
+        return;
+      }
+
+      if (modoEdicao && anoEdicao && String(ano) !== String(anoEdicao)) {
+        alert('Não é permitido alterar o ano do alvará. Edite a data para o mesmo ano do registro original.');
+        return;
+      }
+
+      const btn = document.getElementById('btnGerar');
+      const textoOriginal = btn.textContent;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loader"></span> Salvando...';
+
+      try {
+        const dados = { nome, razao, endereco, atividade, cnpj, dataEmissao, ano: parseInt(ano, 10) };
+        if (paginaExtraAtiva && conteudoObservacoes) {
+          dados.observacoes = conteudoObservacoes;
+        } else {
+          dados.observacoes = '';
+        }
+        if (modoEdicao) {
+          const existing = await buscarAlvaraPorId(idEdicao);
+          dados.revogado = existing ? existing.revogado : false;
+        } else {
+          dados.revogado = false;
+        }
+
+        let resultado = null;
+        if (modoEdicao && idEdicao) {
+          await salvarAlvara(dados, idEdicao, numeroEdicao, anoEdicao);
+          resultado = { numero: numeroEdicao, ano: anoEdicao };
+          alert('Alvará atualizado com sucesso!');
+          modoEdicao = false;
+          idEdicao = null;
+          numeroEdicao = null;
+          anoEdicao = null;
+          document.getElementById('btnGerar').textContent = 'Gerar Alvará';
+          document.getElementById('divCancelar').style.display = 'none';
+        } else {
+          resultado = await salvarAlvara(dados);
+          if (resultado === null) {
+            btn.disabled = false;
+            btn.textContent = textoOriginal;
+            return;
+          }
+          alert('Alvará gerado com sucesso!');
+        }
+
+        const dadosComNumero = { ...dados, numero: resultado.numero, ano: resultado.ano };
+        await exibirPrevia(dadosComNumero);
+
+        btn.disabled = false;
+        btn.textContent = textoOriginal;
+
+      } catch (error) {
+        console.error('Erro ao salvar:', error);
+        alert('Ocorreu um erro ao salvar. Tente novamente.');
+        btn.disabled = false;
+        btn.textContent = textoOriginal;
+      }
+    }
+
+    // EXIBIR PRÉVIA
+    async function exibirPrevia(dados) {
+      const numero = dados.numero;
+      document.getElementById('docNumber').textContent = `Nº ${formatarNumero(numero)}`;
+      document.getElementById('displayNome').textContent = dados.nome;
+      document.getElementById('displayRazao').textContent = dados.razao;
+      document.getElementById('displayEndereco').textContent = dados.endereco;
+      document.getElementById('displayAtividade').textContent = dados.atividade;
+      document.getElementById('displayCnpj').textContent = dados.cnpj;
+
+      const dataFormatada = formatarData(dados.dataEmissao);
+      document.getElementById('dataAssinatura').innerHTML = `Careiro, <span>${dataFormatada}.</span>`;
+
+      const config = await getConfigAlvara();
+      document.getElementById('displaySecretaria').textContent = config.secretaria || 'Nubia Lima Pereira';
+      document.getElementById('displayCoordenadora').textContent = config.coordenadora || 'Gisele Matta de Souza';
+      document.getElementById('displayPortariaSecretaria').textContent = config.portariaSecretaria || 'PORT. 005, DE 02 DE JANEIRO DE 2025';
+      document.getElementById('displayPortariaCoordenadora').textContent = config.portariaCoordenadora || 'PORT. 256, DE 05 DE FEVEREIRO DE 2025';
+
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('listaContainer').style.display = 'none';
+      document.getElementById('document-root').classList.remove('hidden');
+
+      const paginaExtra = document.getElementById('paginaExtra');
+      const conteudoExtra = document.getElementById('conteudoExtra');
+      if (paginaExtraAtiva && conteudoObservacoes) {
+        conteudoExtra.textContent = conteudoObservacoes;
+        paginaExtra.style.display = 'block';
+      } else {
+        paginaExtra.style.display = 'none';
+        conteudoExtra.textContent = '';
+      }
+    }
+
+    // ============================================
+    //  BUSCA DE ESTABELECIMENTOS
+    // ============================================
+    async function carregarEstabelecimentosParaBusca() {
+      try {
+        if (typeof _BASE_REF === 'undefined' || typeof _STATE_REF === 'undefined' || typeof _INATIVOS_REF === 'undefined') {
+          console.warn('Referências do Firebase principal não disponíveis.');
+          return;
+        }
+
+        const [baseSnap, stateSnap, inativosSnap] = await Promise.all([
+          _BASE_REF.get(),
+          _STATE_REF.get(),
+          _INATIVOS_REF.get()
+        ]);
+
+        const baseData = baseSnap.exists ? (baseSnap.data().estabelecimentos || []) : [];
+        const stateData = stateSnap.exists ? stateSnap.data() : {};
+        const custom = stateData.custom || [];
+        const edited = stateData.edited || {};
+        const deleted = stateData.deleted || [];
+        const disabled = stateData.disabled || [];
+        const inativosData = inativosSnap.exists ? (inativosSnap.data().estabelecimentos || []) : [];
+        const inativosIds = new Set(inativosData.map(est => String(est.id)));
+
+        let todos = baseData.map(item => ({ ...item }));
+        todos = todos.map(item => {
+          const edit = edited[String(item.id)];
+          return edit ? { ...item, ...edit } : item;
+        });
+        custom.forEach(item => {
+          if (!todos.some(t => String(t.id) === String(item.id))) {
+            todos.push(item);
+          }
+        });
+        todos = todos.filter(item => !deleted.includes(String(item.id)));
+        todos = todos.filter(item => !disabled.includes(String(item.id)));
+        todos = todos.filter(item => !inativosIds.has(String(item.id)));
+
+        window._estabelecimentosAtivos = todos;
+
+        const datalist = document.getElementById('estabOptions');
+        const esc = (s) => {
+          if (s == null) return '';
+          return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+        };
+        datalist.innerHTML = todos.map(est =>
+          `<option value="${esc(est.nome_fantasia)}">`
+        ).join('');
+      } catch (e) {
+        console.warn('Erro ao carregar estabelecimentos para busca:', e);
+      }
+    }
+
+    // Evento de seleção na busca
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('buscaEstabelecimento').addEventListener('change', function() {
+        const nome = this.value.trim();
+        if (!nome) return;
+        const encontrado = window._estabelecimentosAtivos?.find(est => est.nome_fantasia === nome);
+        if (encontrado) {
+          document.getElementById('nome').value = encontrado.nome_fantasia || '';
+          document.getElementById('razao').value = encontrado.razao_social || '';
+          document.getElementById('endereco').value = encontrado.endereco || '';
+          document.getElementById('atividade').value = encontrado.tipo_atividade || '';
+          document.getElementById('cnpj').value = encontrado.cpf_cnpj || '';
+          const cnpjInput = document.getElementById('cnpj');
+          cnpjInput.dispatchEvent(new Event('blur'));
+        }
+      });
+    });
+
+    // ============================================
+    //  VALIDAÇÃO E CONSULTA DE CNPJ NO BLUR (sem feedback)
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const cnpjInput = document.getElementById('cnpj');
+
+      cnpjInput.addEventListener('input', function() {
+        aplicarMascaraCnpjCpf(this);
+        this.classList.remove('valid', 'invalid');
+      });
+
+      cnpjInput.addEventListener('blur', async function() {
+        const valor = this.value.trim();
+        if (!valor) {
+          this.classList.remove('valid', 'invalid');
+          return;
+        }
+
+        const limpo = valor.replace(/\D/g, '');
+        const isCpf = limpo.length === 11;
+        const isCnpj = limpo.length === 14;
+
+        if (isCpf) {
+          if (validarCPF(limpo)) {
+            this.classList.add('valid');
+            this.classList.remove('invalid');
+          } else {
+            this.classList.add('invalid');
+            this.classList.remove('valid');
+          }
+          return;
+        }
+
+        if (isCnpj) {
+          if (!validarCNPJ(limpo)) {
+            this.classList.add('invalid');
+            this.classList.remove('valid');
+            return;
+          }
+
+          this.classList.remove('valid', 'invalid');
+
+          const dados = await consultarCnpj(limpo);
+          if (dados) {
+            const atividadeDesc = dados.cnae_fiscal_descricao || '';
+            if (atividadeDesc) {
+              document.getElementById('atividade').value = atividadeDesc.toUpperCase();
+            }
+            if (dados.razao_social && !document.getElementById('razao').value) {
+              document.getElementById('razao').value = dados.razao_social.toUpperCase();
+            }
+            if (dados.nome_fantasia && !document.getElementById('nome').value) {
+              document.getElementById('nome').value = dados.nome_fantasia.toUpperCase();
+            }
+            if (dados.logradouro || dados.numero || dados.bairro || dados.municipio || dados.uf) {
+              const end = [dados.logradouro, dados.numero, dados.bairro, dados.municipio, dados.uf]
+                .filter(Boolean).join(', ').toUpperCase();
+              if (end && !document.getElementById('endereco').value) {
+                document.getElementById('endereco').value = end;
+              }
+            }
+            this.classList.add('valid');
+            this.classList.remove('invalid');
+          } else {
+            this.classList.add('valid');
+            this.classList.remove('invalid');
+          }
+        } else {
+          this.classList.add('invalid');
+          this.classList.remove('valid');
+        }
+      });
+    });
+
+    // ============================================
+    //  INICIALIZAÇÃO
+    // ============================================
+    document.addEventListener('DOMContentLoaded', async function() {
+      document.getElementById('paginaExtra').style.display = 'none';
+
+      const config = await getConfigAlvara();
+      document.getElementById('displaySecretaria').textContent = config.secretaria || 'Nubia Lima Pereira';
+      document.getElementById('displayCoordenadora').textContent = config.coordenadora || 'Gisele Matta de Souza';
+      document.getElementById('displayPortariaSecretaria').textContent = config.portariaSecretaria || 'PORT. 005, DE 02 DE JANEIRO DE 2025';
+      document.getElementById('displayPortariaCoordenadora').textContent = config.portariaCoordenadora || 'PORT. 256, DE 05 DE FEVEREIRO DE 2025';
+
+      const inputs = document.querySelectorAll('#nome, #razao, #endereco, #atividade');
+      inputs.forEach(inp => {
+        inp.addEventListener('input', function() {
+          this.value = this.value.toUpperCase();
+        });
+      });
+
+      try {
+        await carregarEstabelecimentosParaBusca();
+      } catch (e) {
+        console.warn('Falha ao carregar estabelecimentos para busca:', e);
+      }
+    });
+
+    console.log('Sistema de Alvarás com validação sem feedback e remoção de color-adjust carregado.');
+  </script>
+</body>
+</html>

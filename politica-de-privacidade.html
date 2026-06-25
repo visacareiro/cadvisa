@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade — CADVISA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rosa: #f9b8c8;
+            --rosa-dark: #f48aab;
+            --rosa-soft: #fde8ee;
+            --bg: #f5e8ef;
+            --text: #2d1b24;
+            --text-light: #7a4f61;
+            --radius: 16px;
+            --shadow: 0 4px 24px rgba(244, 138, 171, 0.13);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 20% 20%, rgba(249, 184, 200, 0.35) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(253, 230, 138, 0.25) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1.5px solid rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius);
+            padding: 40px 36px;
+            box-shadow: 0 24px 80px rgba(45, 27, 36, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(244, 138, 171, 0.2);
+        }
+        .header-logo .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--rosa-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 16px rgba(244, 138, 171, 0.4);
+            flex-shrink: 0;
+        }
+        .header-logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            line-height: 1.2;
+        }
+        .header-logo p {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin: 24px 0 12px;
+            color: var(--rosa-dark);
+            border-bottom: 1.5px solid rgba(244, 138, 171, 0.25);
+            padding-bottom: 8px;
+        }
+        h3 {
+            font-size: 14px;
+            margin: 16px 0 8px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        p, li {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+        ul {
+            padding-left: 24px;
+            margin-bottom: 14px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        .destaque {
+            background: rgba(255, 244, 224, 0.65);
+            border-left: 4px solid #f6a623;
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            margin: 18px 0;
+            font-weight: 500;
+        }
+        .destaque-rosa {
+            background: rgba(249, 184, 200, 0.12);
+            border-left: 4px solid var(--rosa-dark);
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            margin: 18px 0;
+            font-weight: 500;
+        }
+        .footer-termo {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(244, 138, 171, 0.2);
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+        }
+        .footer-termo strong {
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-logo">
+            <div class="logo-icon">🏥</div>
+            <div>
+                <h1>CADVISA</h1>
+                <p>Cadastro Sanitário Municipal</p>
+            </div>
+        </div>
+
+        <h2>🔒 Política de Privacidade e Proteção de Dados</h2>
+        <p><strong>Última atualização:</strong> 24 de abril de 2026</p>
+
+        <h3>1. Introdução</h3>
+        <p>Esta Política de Privacidade descreve como o sistema <strong>CADVISA — Cadastro Sanitário Municipal</strong> trata os dados pessoais e informações cadastrais inseridos pelos seus usuários (servidores públicos da Vigilância Sanitária Municipal de Careiro, Amazonas). Esta política está em conformidade com a <strong>Lei Geral de Proteção de Dados Pessoais (LGPD)</strong> — Lei nº 13.709/2018.</p>
+
+        <h3>2. Dos Dados Coletados e Armazenados</h3>
+        <p>O Sistema armazena os seguintes tipos de informações, inseridas exclusivamente pelos servidores da VISA:</p>
+        <ul>
+            <li><strong>Dados de estabelecimentos comerciais e de serviços:</strong> nome fantasia, razão social, CPF/CNPJ, endereço completo, localidade (bairro/comunidade), categoria de atividade, tipo de atividade, CNAE, classe de risco sanitário, data da última fiscalização, órgão licenciador e situação do licenciamento;</li>
+            <li><strong>Dados de fiscalização:</strong> nome do fiscal responsável, datas de fiscalização, tipo de ação fiscal, descrições e observações;</li>
+            <li><strong>Dados de cronograma:</strong> planejamento mensal de fiscalizações com indicação de fiscais e estabelecimentos;</li>
+            <li><strong>Dados de acesso administrativo:</strong> e-mail e senha (armazenados de forma simples, sem criptografia avançada) dos servidores autorizados a utilizar o Sistema.</li>
+        </ul>
+
+        <div class="destaque">
+            ⚠️ <strong>Atenção:</strong> Todos os dados armazenados no Sistema são <strong>inseridos manualmente</strong> pelos servidores da VISA no exercício de suas funções públicas. O desenvolvedor não coleta dados automaticamente e não tem qualquer ingerência sobre o conteúdo inserido.
+        </div>
+
+        <h3>3. Da Finalidade do Tratamento dos Dados</h3>
+        <p>Os dados são tratados com a <strong>finalidade exclusiva</strong> de:</p>
+        <ul>
+            <li>Manter o cadastro sanitário municipal atualizado, conforme exigido pela legislação sanitária vigente;</li>
+            <li>Planejar e registrar as ações de fiscalização sanitária realizadas pela VISA de Careiro;</li>
+            <li>Emitir relatórios e listagens para fins administrativos e de transparência pública;</li>
+            <li>Possibilitar o acompanhamento do status de regularidade sanitária dos estabelecimentos do município.</li>
+        </ul>
+
+        <h3>4. Do Armazenamento e Hospedagem</h3>
+        <p>Os dados são armazenados em nuvem, utilizando a plataforma <strong>Google Firebase (Firestore)</strong>, serviço fornecido pela Google LLC. Isso significa que os dados residem em servidores de terceiros (Google), que possuem suas próprias políticas de segurança e privacidade. O desenvolvedor não possui servidor próprio e não tem controle direto sobre a infraestrutura física onde os dados são armazenados.</p>
+
+        <h3>5. Do Compartilhamento de Dados</h3>
+        <ul>
+            <li>O desenvolvedor <strong>NÃO compartilha, vende, aluga ou transfere</strong> os dados a terceiros, exceto quando exigido por lei ou determinação judicial;</li>
+            <li>Os dados <strong>não são utilizados</strong> para fins comerciais, publicitários ou de qualquer outra natureza alheia à vigilância sanitária;</li>
+            <li>O acesso aos dados é restrito aos servidores da VISA de Careiro devidamente credenciados com e-mail e senha;</li>
+            <li>A plataforma Google Firebase pode acessar os dados para fins de manutenção da infraestrutura, nos termos da política de privacidade do Google.</li>
+        </ul>
+
+        <h3>6. Da Responsabilidade pelo Uso dos Dados</h3>
+        <div class="destaque-rosa">
+            <strong>🔐 Responsabilidade do Usuário:</strong> Os servidores públicos que acessam e utilizam o Sistema CADVISA assumem <strong>total e exclusiva responsabilidade</strong> pelo tratamento dos dados nele inseridos, incluindo a veracidade, atualização, correção e exclusão das informações. O desenvolvedor não realiza qualquer validação, conferência ou auditoria dos dados cadastrados, sendo mero fornecedor da ferramenta tecnológica.
+        </div>
+        <ul>
+            <li>Cabe ao Usuário garantir que o tratamento dos dados pessoais de terceiros (como CPF/CNPJ, endereços e razões sociais de estabelecimentos e seus proprietários) esteja em conformidade com a LGPD e demais legislações aplicáveis;</li>
+            <li>Cabe ao Usuário manter a confidencialidade de suas credenciais de acesso, não as compartilhando com pessoas não autorizadas;</li>
+            <li>Cabe ao Usuário utilizar a funcionalidade de backup disponível no Sistema (menu Configurações) para manter cópia de segurança atualizada dos dados;</li>
+            <li>Cabe ao Usuário comunicar imediatamente ao desenvolvedor qualquer incidente de segurança, acesso não autorizado ou vazamento de dados de que tome conhecimento.</li>
+        </ul>
+
+        <h3>7. Dos Direitos dos Titulares dos Dados</h3>
+        <p>Em conformidade com a LGPD, os titulares dos dados pessoais (proprietários de estabelecimentos, fiscais e demais pessoas cujos dados constem no Sistema) têm os seguintes direitos:</p>
+        <ul>
+            <li>Confirmação da existência de tratamento de seus dados;</li>
+            <li>Acesso aos dados armazenados;</li>
+            <li>Correção de dados incompletos, inexatos ou desatualizados;</li>
+            <li>Anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade com a LGPD;</li>
+            <li>Eliminação dos dados tratados com consentimento, quando aplicável.</li>
+        </ul>
+        <p>Para exercer esses direitos, o titular deve entrar em contato diretamente com a <strong>Vigilância Sanitária Municipal de Careiro</strong>, que é a responsável pelo tratamento dos dados. O desenvolvedor, como mero fornecedor da ferramenta, poderá auxiliar tecnicamente se solicitado pela VISA.</p>
+
+        <h3>8. Da Eliminação dos Dados</h3>
+        <p>Os dados podem ser eliminados do Sistema nas seguintes situações:</p>
+        <ul>
+            <li>Mediante solicitação formal do titular dos dados à VISA de Careiro, que procederá à exclusão;</li>
+            <li>Em caso de desativação (inativação) de estabelecimento pelo Usuário no Sistema, os dados permanecem armazenados em área específica de inativos até que sejam definitivamente excluídos;</li>
+            <li>Em caso de requisição e devolução do Sistema pelo desenvolvedor (conforme Termo de Uso), os dados serão integralmente disponibilizados à VISA e posteriormente eliminados da plataforma de hospedagem após o prazo de 30 dias.</li>
+        </ul>
+
+        <h3>9. Da Segurança</h3>
+        <p>O Sistema adota medidas técnicas razoáveis para proteger os dados contra acessos não autorizados, incluindo:</p>
+        <ul>
+            <li>Autenticação por e-mail e senha para acesso ao painel administrativo;</li>
+            <li>Armazenamento em plataforma de nuvem com criptografia em trânsito (HTTPS) provida pelo Google Firebase;</li>
+            <li>Restrição de acesso ao código-fonte e às credenciais de administração do banco de dados exclusivamente ao desenvolvedor.</li>
+        </ul>
+        <p>Entretanto, <strong>nenhum sistema é 100% seguro</strong>. O desenvolvedor não pode garantir segurança absoluta contra todas as ameaças cibernéticas existentes ou futuras. A responsabilidade pela segurança das credenciais de acesso é compartilhada com os Usuários, que devem adotar senhas fortes e não compartilhá-las.</p>
+
+        <h3>10. Das Alterações nesta Política</h3>
+        <p>Esta Política de Privacidade poderá ser atualizada a qualquer momento, a critério do desenvolvedor, para refletir mudanças no Sistema, na legislação ou nas práticas de tratamento de dados. As alterações serão comunicadas por meio de aviso no próprio Sistema ou por e-mail cadastrado.</p>
+
+        <h3>11. Do Contato</h3>
+        <p>Para dúvidas, solicitações ou comunicações relacionadas à privacidade e proteção de dados, o canal de contato é:</p>
+        <ul>
+            <li><strong>Vigilância Sanitária Municipal de Careiro — AM</strong> (para assuntos relacionados aos dados dos estabelecimentos e titulares);</li>
+            <li><strong>Desenvolvedor:</strong> Darlan William M. Cardoso (para assuntos técnicos do Sistema).</li>
+        </ul>
+
+        <div class="footer-termo">
+            <p><strong>Darlan William M. Cardoso</strong> — Desenvolvedor e Idealizador do Sistema CADVISA</p>
+            <p>Careiro, Amazonas — 2026</p>
+        </div>
+    </div>
+</body>
+</html>

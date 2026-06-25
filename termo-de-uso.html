@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termo de Uso — CADVISA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rosa: #f9b8c8;
+            --rosa-dark: #f48aab;
+            --rosa-soft: #fde8ee;
+            --bg: #f5e8ef;
+            --text: #2d1b24;
+            --text-light: #7a4f61;
+            --radius: 16px;
+            --shadow: 0 4px 24px rgba(244, 138, 171, 0.13);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 20% 20%, rgba(249, 184, 200, 0.35) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(253, 230, 138, 0.25) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1.5px solid rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius);
+            padding: 40px 36px;
+            box-shadow: 0 24px 80px rgba(45, 27, 36, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(244, 138, 171, 0.2);
+        }
+        .header-logo .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--rosa-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 16px rgba(244, 138, 171, 0.4);
+            flex-shrink: 0;
+        }
+        .header-logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            line-height: 1.2;
+        }
+        .header-logo p {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin: 24px 0 12px;
+            color: var(--rosa-dark);
+            border-bottom: 1.5px solid rgba(244, 138, 171, 0.25);
+            padding-bottom: 8px;
+        }
+        h3 {
+            font-size: 14px;
+            margin: 16px 0 8px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        p, li {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+        ul {
+            padding-left: 24px;
+            margin-bottom: 14px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        .destaque {
+            background: rgba(249, 184, 200, 0.15);
+            border-left: 4px solid var(--rosa-dark);
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            margin: 18px 0;
+            font-weight: 500;
+        }
+        .footer-termo {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(244, 138, 171, 0.2);
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+        }
+        .footer-termo strong {
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-logo">
+            <div class="logo-icon">🏥</div>
+            <div>
+                <h1>CADVISA</h1>
+                <p>Cadastro Sanitário Municipal</p>
+            </div>
+        </div>
+
+        <h2>📄 Termo de Uso do Sistema</h2>
+        <p><strong>Última atualização:</strong> 24 de abril de 2026</p>
+
+        <h3>1. Das Partes</h3>
+        <p>Este Termo de Uso regula a relação entre:</p>
+        <ul>
+            <li><strong>Cedente / Desenvolvedor:</strong> Darlan William M. Cardoso, inscrito no CPF sob o nº ***.046.602-**, residente e domiciliado em Careiro, Amazonas, idealizador e desenvolvedor exclusivo do sistema denominado <strong>&ldquo;CADVISA — Cadastro Sanitário Municipal&rdquo;</strong> (doravante &ldquo;Sistema&rdquo;);</li>
+            <li><strong>Cessionário / Usuário:</strong> A Vigilância Sanitária Municipal de Careiro, Amazonas (doravante &ldquo;VISA&rdquo; ou &ldquo;Usuário&rdquo;), representada pelos seus servidores e agentes públicos autorizados, que utilizam o Sistema para fins de cadastro e fiscalização sanitária.</li>
+        </ul>
+
+        <h3>2. Da Natureza da Cessão</h3>
+        <p>O Sistema é de <strong>propriedade intelectual exclusiva</strong> do desenvolvedor Darlan William M. Cardoso. O código-fonte, a identidade visual, a estrutura de dados e todas as funcionalidades que compõem o Sistema são de sua titularidade. O Sistema está sendo <strong>cedido em comodato verbal por prazo indeterminado</strong> para uso exclusivo da VISA de Careiro, sem transferência de propriedade e sem qualquer ônus financeiro.</p>
+
+        <div class="destaque">
+            ⚠️ <strong>Importante:</strong> A qualquer momento, por qualquer motivo ou natureza, o desenvolvedor poderá <strong>requisitar a devolução do Sistema</strong>, encerrando a cessão de uso.
+        </div>
+
+        <h3>3. Da Requisição e Prazo de Desativação</h3>
+        <p>Caso o desenvolvedor opte por requisitar o Sistema, a VISA será notificada formalmente (por e-mail, ofício ou comunicado oficial). A partir da data da notificação, será concedido um <strong>prazo de 30 (trinta) dias corridos</strong> para que:</p>
+        <ul>
+            <li>A VISA possa extrair todos os dados de estabelecimentos, fiscalizações, cronogramas e demais registros armazenados no Sistema;</li>
+            <li>Os dados sejam disponibilizados <strong>em formato PDF ou impressos</strong> (conforme preferência da VISA) para arquivamento e continuidade administrativa;</li>
+            <li>Após o prazo de 30 dias, o acesso ao Sistema será <strong>definitivamente desativado</strong>, podendo o desenvolvedor remover a hospedagem, os bancos de dados e todos os recursos associados.</li>
+        </ul>
+
+        <h3>4. Dos Motivos da Desativação</h3>
+        <p>O motivo da requisição e consequente desativação <strong>pode ser de qualquer natureza</strong>, incluindo, mas não se limitando a:</p>
+        <ul>
+            <li>Encerramento da parceria ou da cessão verbal;</li>
+            <li>Mudança na administração pública municipal;</li>
+            <li>Necessidade de manutenção ou migração tecnológica;</li>
+            <li>Impossibilidade de continuidade da hospedagem;</li>
+            <li>Decisão unilateral do desenvolvedor, a seu exclusivo critério.</li>
+        </ul>
+
+        <h3>5. Das Obrigações do Usuário</h3>
+        <ul>
+            <li>Utilizar o Sistema exclusivamente para finalidades de vigilância sanitária e cadastro sanitário municipal, em conformidade com a legislação vigente;</li>
+            <li>Zelar pela segurança das credenciais de acesso (e-mail e senha), sendo cada usuário responsável pelos atos praticados com seu login;</li>
+            <li>Não reproduzir, modificar, distribuir, descompilar, fazer engenharia reversa ou criar obras derivadas do Sistema sem autorização expressa do desenvolvedor;</li>
+            <li>Manter cópia de segurança (backup) periódica dos dados, utilizando a funcionalidade de exportação disponível no próprio Sistema, para precaução contra eventuais interrupções;</li>
+            <li>Comunicar ao desenvolvedor quaisquer falhas, erros ou comportamentos anômalos identificados durante o uso do Sistema.</li>
+        </ul>
+
+        <h3>6. Da Isenção de Responsabilidade do Desenvolvedor</h3>
+        <ul>
+            <li>O desenvolvedor <strong>não se responsabiliza</strong> por eventuais perdas de dados decorrentes de caso fortuito, força maior, falhas de infraestrutura de terceiros (como a plataforma Firebase/Google), ataques cibernéticos ou ausência de backup por parte do Usuário;</li>
+            <li>O desenvolvedor <strong>não é responsável</strong> pela veracidade, integridade ou atualização dos dados inseridos pelos servidores da VISA no Sistema, sendo tal responsabilidade exclusiva do Usuário;</li>
+            <li>O desenvolvedor <strong>não garante disponibilidade ininterrupta</strong> do Sistema, podendo ocorrer indisponibilidades temporárias para manutenções, atualizações ou por motivos alheios à sua vontade.</li>
+        </ul>
+
+        <h3>7. Da Aceitação</h3>
+        <p>O acesso e a utilização do Sistema CADVISA implicam a <strong>aceitação integral e irretratável</strong> de todos os termos e condições aqui estabelecidos. Caso o Usuário não concorde com qualquer disposição deste Termo, deverá abster-se de utilizar o Sistema e comunicar o fato ao desenvolvedor.</p>
+
+        <h3>8. Do Foro</h3>
+        <p>Fica eleito o foro da Comarca de Careiro, Estado do Amazonas, para dirimir quaisquer dúvidas ou controvérsias oriundas deste Termo de Uso, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+
+        <div class="footer-termo">
+            <p><strong>Darlan William M. Cardoso</strong> — Desenvolvedor e Idealizador do Sistema CADVISA</p>
+            <p>Careiro, Amazonas — 2026</p>
+        </div>
+    </div>
+</body>
+</html>
