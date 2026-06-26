@@ -575,6 +575,7 @@
   <!-- ===== FIREBASE ===== -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="firebase-config.js"></script>
 </head>
 <body>
@@ -729,35 +730,63 @@
   <!-- ===== JAVASCRIPT ===== -->
   <script>
     // ============================================
+    //  CONTROLE DE AUTENTICAÇÃO (sem expor e-mail)
+    // ============================================
+    // Aguarda o carregamento do Firebase Auth
+    let db = null;
+    let autenticado = false;
+
+    // Inicializa o Firestore apenas quando autenticado
+    function inicializarFirestore() {
+      try {
+        db = firebase.firestore();
+        console.log('Firestore inicializado com sucesso.');
+      } catch (e) {
+        console.error('Erro ao inicializar o Firestore:', e);
+        alert('Não foi possível conectar ao Firebase. Verifique o arquivo firebase-config.js.');
+      }
+    }
+
+    // Função principal que inicia o sistema após autenticação
+    function iniciarSistema() {
+      // Inicializa Firestore
+      inicializarFirestore();
+      // Executa a inicialização normal do sistema
+      executarInicializacao();
+    }
+
+    // Verifica estado de autenticação
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // Usuário autenticado → inicia o sistema
+        console.log('Usuário autenticado:', user.email);
+        autenticado = true;
+        iniciarSistema();
+      } else {
+        // Não autenticado → redireciona para o login principal
+        console.log('Usuário não autenticado. Redirecionando para login.');
+        window.location.href = 'index.html';
+      }
+    });
+
+    // ============================================
     //  CONSTANTES
     // ============================================
     const TEXTO_PADRAO_OBSERVACOES = `OBSERVAÇÕES:
 
-Este documento deverá ser afixado no estabelecimento, em local visível ao público.
-O presente documento poderá ser suspenso, cassado ou cancelado, a qualquer momento, por irregularidades no estabelecimento.
+    Este documento deverá ser afixado no estabelecimento, em local visível ao público.
+    O presente documento poderá ser suspenso, cassado ou cancelado, a qualquer momento, por irregularidades no estabelecimento.
 
-ATIVIDADE(S) LICENCIADA(S):
+    ATIVIDADE(S) LICENCIADA(S):
 
-Aplicação de injetáveis;
-Aferição de pressão arterial;
-Aferição de glicose;
-Perfuração de lóbulo auricular;
-Dispensação de medicamentos contendo substâncias sujeitas ao controle especial – Portaria Nº 344, de 12 de maio de 1998;
-Exames rápido e teste laboratorial remoto – ECO.`;
+    Aplicação de injetáveis;
+    Aferição de pressão arterial;
+    Aferição de glicose;
+    Perfuração de lóbulo auricular;
+    Dispensação de medicamentos contendo substâncias sujeitas ao controle especial – Portaria Nº 344, de 12 de maio de 1998;
+    Exames rápido e teste laboratorial remoto – ECO.`;
 
     const ITENS_POR_PAGINA = 11;
-
-    // ============================================
-    //  INICIALIZAÇÃO DO FIRESTORE
-    // ============================================
-    let db;
-    try {
-      db = firebase.firestore();
-      console.log('Firestore inicializado com sucesso.');
-    } catch (e) {
-      console.error('Erro ao inicializar o Firestore:', e);
-      alert('Não foi possível conectar ao Firebase. Verifique o arquivo firebase-config.js.');
-    }
 
     // ============================================
     //  ESTADO GLOBAL
@@ -776,7 +805,7 @@ Exames rápido e teste laboratorial remoto – ECO.`;
     const COLECAO_RAIZ = 'alvara';
     const DOC_METADADOS = 'metadados';
     const SUBCOL_ESTABELECIMENTOS = 'estabelecimentos';
-    const CONFIG_ALVARA_REF = db.collection('alvara').doc('config');
+    const CONFIG_ALVARA_REF = () => db.collection('alvara').doc('config');
 
     // ============================================
     //  FUNÇÕES AUXILIARES
@@ -944,6 +973,10 @@ Exames rápido e teste laboratorial remoto – ECO.`;
         return lista;
       } catch (error) {
         console.error('Erro ao buscar alvarás:', error);
+        // Se erro de permissão, lança para tratamento
+        if (error.code === 'permission-denied') {
+          throw new Error('Acesso negado. Você não tem permissão para visualizar os alvarás.');
+        }
         if (error.code === 'failed-precondition' || error.message.includes('index')) {
           console.warn('Índice não encontrado. Buscando sem ordenação...');
           const snapshot = await getEstabelecimentosRef().get();
@@ -996,7 +1029,11 @@ Exames rápido e teste laboratorial remoto – ECO.`;
         }
       } catch (error) {
         console.error('Erro ao salvar alvará:', error);
-        alert('Erro ao salvar alvará. Verifique sua conexão.');
+        if (error.code === 'permission-denied') {
+          alert('Acesso negado. Você não tem permissão para salvar alvarás.');
+        } else {
+          alert('Erro ao salvar alvará. Verifique sua conexão.');
+        }
         return null;
       }
     }
@@ -1007,7 +1044,11 @@ Exames rápido e teste laboratorial remoto – ECO.`;
         await renderizarLista(anoSelecionadoGlobal);
       } catch (error) {
         console.error('Erro ao alternar revogado:', error);
-        alert('Erro ao atualizar status.');
+        if (error.code === 'permission-denied') {
+          alert('Acesso negado. Você não tem permissão para alterar o status.');
+        } else {
+          alert('Erro ao atualizar status.');
+        }
       }
     }
 
@@ -1018,13 +1059,16 @@ Exames rápido e teste laboratorial remoto – ECO.`;
         return { id: doc.id, ...doc.data() };
       } catch (error) {
         console.error('Erro ao buscar alvará:', error);
+        if (error.code === 'permission-denied') {
+          alert('Acesso negado. Você não tem permissão para visualizar este alvará.');
+        }
         return null;
       }
     }
 
     async function getConfigAlvara() {
       try {
-        const doc = await CONFIG_ALVARA_REF.get();
+        const doc = await CONFIG_ALVARA_REF().get();
         if (doc.exists) {
           return doc.data();
         } else {
@@ -1037,6 +1081,9 @@ Exames rápido e teste laboratorial remoto – ECO.`;
         }
       } catch (e) {
         console.error('Erro ao buscar config alvara:', e);
+        if (e.code === 'permission-denied') {
+          alert('Acesso negado ao carregar configurações do alvará.');
+        }
         return {
           secretaria: 'Nubia Lima Pereira',
           coordenadora: 'Gisele Matta de Souza',
@@ -1123,7 +1170,7 @@ Exames rápido e teste laboratorial remoto – ECO.`;
         alvarasCache = alvaras;
       } catch (error) {
         console.error('Falha ao carregar lista:', error);
-        container.innerHTML = `<p class="text-red-500 text-center">Erro ao carregar lista: ${error.message}</p>`;
+        container.innerHTML = `<p class="text-red-500 text-center">${error.message || 'Erro ao carregar lista'}</p>`;
         document.getElementById('abasContainer').innerHTML = '';
         document.getElementById('paginacaoContainer').style.display = 'none';
         return;
@@ -1574,14 +1621,17 @@ Exames rápido e teste laboratorial remoto – ECO.`;
     // ============================================
     //  INICIALIZAÇÃO
     // ============================================
-    document.addEventListener('DOMContentLoaded', async function() {
+    // Função que será chamada após autenticação
+    function executarInicializacao() {
       document.getElementById('paginaExtra').style.display = 'none';
 
-      const config = await getConfigAlvara();
-      document.getElementById('displaySecretaria').textContent = config.secretaria || 'Nubia Lima Pereira';
-      document.getElementById('displayCoordenadora').textContent = config.coordenadora || 'Gisele Matta de Souza';
-      document.getElementById('displayPortariaSecretaria').textContent = config.portariaSecretaria || 'PORT. 005, DE 02 DE JANEIRO DE 2025';
-      document.getElementById('displayPortariaCoordenadora').textContent = config.portariaCoordenadora || 'PORT. 256, DE 05 DE FEVEREIRO DE 2025';
+      // Carregar configurações do alvará (após autenticação)
+      getConfigAlvara().then(config => {
+        document.getElementById('displaySecretaria').textContent = config.secretaria || 'Nubia Lima Pereira';
+        document.getElementById('displayCoordenadora').textContent = config.coordenadora || 'Gisele Matta de Souza';
+        document.getElementById('displayPortariaSecretaria').textContent = config.portariaSecretaria || 'PORT. 005, DE 02 DE JANEIRO DE 2025';
+        document.getElementById('displayPortariaCoordenadora').textContent = config.portariaCoordenadora || 'PORT. 256, DE 05 DE FEVEREIRO DE 2025';
+      }).catch(console.warn);
 
       const inputs = document.querySelectorAll('#nome, #razao, #endereco, #atividade');
       inputs.forEach(inp => {
@@ -1590,14 +1640,13 @@ Exames rápido e teste laboratorial remoto – ECO.`;
         });
       });
 
-      try {
-        await carregarEstabelecimentosParaBusca();
-      } catch (e) {
-        console.warn('Falha ao carregar estabelecimentos para busca:', e);
-      }
-    });
+      // Carregar estabelecimentos para busca (se disponível)
+      carregarEstabelecimentosParaBusca().catch(console.warn);
 
-    console.log('Sistema de Alvarás com validação sem feedback e remoção de color-adjust carregado.');
+      console.log('Sistema de Alvarás com autenticação integrada carregado.');
+    }
+
+    // Nota: a inicialização é disparada pelo onAuthStateChanged acima.
   </script>
 </body>
 </html>
