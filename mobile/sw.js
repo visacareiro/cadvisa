@@ -10,8 +10,8 @@ const RUNTIME_CACHE   = 'visa-runtime-v1';
 // Assets que devem ser cacheados na instalação
 const PRECACHE_ASSETS = [
   './index.html',
+  './firebase-config.js',
   './manifest.json',
-  '../firebase-config.js',
   './assets/icon-192.png'
 ];
 

@@ -746,12 +746,6 @@
     // ============================================================
     //  Service Worker (opcional)
     // ============================================================
-    (function(){
-        if (!('serviceWorker' in navigator)) return;
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js', { scope: '/cadvisa/mobile/' }).catch(()=>{});
-        });
-    })();
 
 </script>
 </body>

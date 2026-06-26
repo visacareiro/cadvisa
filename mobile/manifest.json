@@ -3,8 +3,8 @@
   "short_name": "CADVISA Careiro",
   "description": "Sistema de Cadastro Sanitário Municipal da Vigilância Sanitária de Careiro, AM",
 
-  "start_url": "/cadvisa/mobile/index.html",
-  "scope": "/cadvisa/mobile/",
+  "start_url": "/cadvisa/index.html",
+  "scope": "/cadvisa/",
 
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -50,7 +50,7 @@
       "name": "Fiscalizações",
       "short_name": "Fiscalizar",
       "description": "Registrar fiscalização",
-      "url": "/cadvisa/mobile/index.html#fiscalizacao",
+      "url": "/cadivisa/index.html#fiscalizacao",
       "icons": [
         { "src": "../assets/icon-96.png", "sizes": "96x96", "type": "image/png" }
       ]
