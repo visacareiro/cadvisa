@@ -2,60 +2,53 @@
   "name": "CADVISA Careiro — Cadastro Sanitário",
   "short_name": "CADVISA Careiro",
   "description": "Sistema de Cadastro Sanitário Municipal da Vigilância Sanitária de Careiro, AM",
-
-  "start_url": "/mobile/index.html",
-  "scope": "/mobile/",
-
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-
   "background_color": "#f5e8ef",
   "theme_color": "#f48aab",
-
   "lang": "pt-BR",
   "categories": ["productivity", "government"],
-
   "icons": [
     {
-      "src": "../assets/icon-192.png",
+      "src": "assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "../assets/icon-512.png",
+      "src": "assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "../assets/icon-512.png",
+      "src": "assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
-
   "shortcuts": [
     {
       "name": "Estabelecimentos",
       "short_name": "Estabs.",
       "description": "Ver lista de estabelecimentos",
-      "url": "/mobile/index.html#estabelecimentos",
+      "url": "/index.html#estabelecimentos",
       "icons": [
-        { "src": "../assets/icon-96.png", "sizes": "96x96", "type": "image/png" }
+        { "src": "assets/icon-96.png", "sizes": "96x96", "type": "image/png" }
       ]
     },
     {
       "name": "Fiscalizações",
       "short_name": "Fiscalizar",
       "description": "Registrar fiscalização",
-      "url": "/mobile/index.html#fiscalizacao",
+      "url": "/index.html#fiscalizacao",
       "icons": [
-        { "src": "../assets/icon-96.png", "sizes": "96x96", "type": "image/png" }
+        { "src": "assets/icon-96.png", "sizes": "96x96", "type": "image/png" }
       ]
     }
   ],
-
   "prefer_related_applications": false
 }
