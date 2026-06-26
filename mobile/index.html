@@ -744,12 +744,16 @@
     boot();
 
     // ============================================================
-    //  Service Worker (opcional)
+    //  Service Worker – CORRIGIDO: escopo padrão (sem parâmetro)
+    //  O escopo passa a ser o diretório atual, permitindo que o
+    //  navegador reconheça o PWA e ofereça a instalação.
     // ============================================================
     (function(){
         if (!('serviceWorker' in navigator)) return;
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js', { scope: '/fiscalizacao/mobile/' }).catch(()=>{});
+            navigator.serviceWorker.register('./sw.js')
+                .then(() => console.log('Service Worker registrado com sucesso.'))
+                .catch(err => console.warn('Falha ao registrar Service Worker:', err));
         });
     })();
 
