@@ -2,14 +2,19 @@
   "name": "CADVISA Careiro — Cadastro Sanitário",
   "short_name": "CADVISA Careiro",
   "description": "Sistema de Cadastro Sanitário Municipal da Vigilância Sanitária de Careiro, AM",
-  "start_url": "/mobile/index.html",
-  "scope": "/mobile/",
+
+  "start_url": "/cadvisa/mobile/index.html",
+  "scope": "/cadvisa/mobile/",
+
   "display": "standalone",
   "orientation": "portrait-primary",
+
   "background_color": "#f5e8ef",
   "theme_color": "#f48aab",
+
   "lang": "pt-BR",
   "categories": ["productivity", "government"],
+
   "icons": [
     {
       "src": "../assets/icon-192.png",
@@ -30,6 +35,7 @@
       "purpose": "maskable"
     }
   ],
+
   "shortcuts": [
     {
       "name": "Estabelecimentos",
@@ -44,11 +50,12 @@
       "name": "Fiscalizações",
       "short_name": "Fiscalizar",
       "description": "Registrar fiscalização",
-      "url": "/mobile/index.html#fiscalizacao",
+      "url": "/cadvisa/mobile/index.html#fiscalizacao",
       "icons": [
         { "src": "../assets/icon-96.png", "sizes": "96x96", "type": "image/png" }
       ]
     }
   ],
+
   "prefer_related_applications": false
 }

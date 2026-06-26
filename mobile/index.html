@@ -11,17 +11,15 @@
     <meta name="description" content="Sistema de Cadastro Sanitário Municipal — Consulta Mobile">
     <title>CADVISA Careiro — Consulta</title>
 
-    <!-- Ícones e manifest – caminhos relativos à raiz do site -->
-    <link rel="icon" href="assets/icon-192.png">
-    <link rel="shortcut icon" href="assets/icon-192.png">
-    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <link rel="icon" href="../assets/icon-192.png">
+    <link rel="shortcut icon" href="../assets/icon-192.png">
+    <link rel="apple-touch-icon" href="../assets/icon-192.png">
     <link rel="manifest" href="manifest.json">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 
-    <!-- Firebase – caminho corrigido para subir um nível -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
@@ -243,29 +241,6 @@
         :focus-visible { outline: 2px solid var(--rosa-dark); outline-offset: 2px; border-radius: 4px; }
         button:focus:not(:focus-visible) { outline: none; }
         @media (max-height: 500px) and (orientation: landscape) { .bottom-nav { display: none !important; } .main { padding-bottom: var(--safe-bottom) !important; } }
-
-        /* Botão de instalação personalizado */
-        #install-btn-container {
-            display: none;
-            position: fixed;
-            bottom: calc(80px + var(--safe-bottom));
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 200;
-            background: var(--rosa-dark);
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 24px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 0 4px 20px rgba(244,138,171,0.5);
-            cursor: pointer;
-            touch-action: manipulation;
-            transition: transform .2s;
-        }
-        #install-btn-container:active { transform: translateX(-50%) scale(0.96); }
     </style>
 </head>
 <body>
@@ -288,7 +263,7 @@
 
 <div id="loadingOverlay" style="display:none;position:fixed;inset:0;background:rgba(245,232,239,.96);z-index:9000;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding-top:env(safe-area-inset-top,0px)">
     <div style="width:72px;height:72px;border-radius:22px;overflow:hidden;box-shadow:0 6px 24px rgba(244,138,171,0.35);background:var(--rosa-dark);display:flex;align-items:center;justify-content:center;font-size:36px">
-        <img src="assets/icon-192.png" alt="VISA" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.textContent='🏥'">
+        <img src="../assets/icon-192.png" alt="VISA" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.textContent='🏥'">
     </div>
     <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700">CADVISA Careiro</div>
     <div style="font-size:13px;color:var(--text-muted)">Carregando dados da nuvem…</div>
@@ -361,9 +336,6 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Botão de instalação personalizado -->
-<button id="install-btn-container" onclick="installApp()">📲 Instalar aplicativo</button>
-
 <script>
     // ============================================================
     //  Configuração e Estado Global
@@ -372,7 +344,6 @@
     const PAGE_SIZE = 20;
     let filters = { q: '', bairro: '', categoria: '' };
     let _currentUser = null;
-    let _deferredPrompt = null;
 
     // Recupera sessão salva (se houver)
     (function(){
@@ -427,7 +398,7 @@
     function licenciamentoBadge(val) { if (val==='Sim') return '<span class="badge badge-fiscalizado">✅ Licenciado</span>'; if (val==='Não') return '<span class="badge badge-pendente">❌ Não licenciado</span>'; return '<span class="badge badge-sem">—</span>'; }
 
     // ============================================================
-    //  Navegação e Filtros
+    //  Navegação e Filtros (idênticos ao original)
     // ============================================================
     function navigate(pg) {
         currentPage = pg;
@@ -499,7 +470,7 @@
     function goPage(p){ const tp=Math.max(1,Math.ceil(filteredData().length/PAGE_SIZE)); if (p<1||p>tp) return; currentEstabPage=p; renderTable(); window.scrollTo({top:0,behavior:'smooth'}); }
 
     // ============================================================
-    //  Detalhes
+    //  Detalhes (estabelecimento, cronograma, legislação)
     // ============================================================
     function openEstabDetail(id) {
         const r = DADOS.find(d => d.id === id); if (!r) return;
@@ -612,7 +583,7 @@
     function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
 
     // ============================================================
-    //  AUTENTICAÇÃO
+    //  AUTENTICAÇÃO — COM FIREBASE AUTH
     // ============================================================
 
     async function doLogin() {
@@ -678,7 +649,7 @@
     }
 
     // ============================================================
-    //  BOOT
+    //  BOOT – inicialização do sistema
     // ============================================================
 
     async function boot() {
@@ -773,55 +744,15 @@
     boot();
 
     // ============================================================
-    //  Service Worker – registrado sem escopo fixo
+    //  Service Worker (opcional)
     // ============================================================
     (function(){
         if (!('serviceWorker' in navigator)) return;
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(() => console.log('Service Worker registrado com sucesso.'))
-                .catch(err => console.warn('Falha ao registrar Service Worker:', err));
+            navigator.serviceWorker.register('./sw.js', { scope: '/cadvisa/mobile/' }).catch(()=>{});
         });
     })();
 
-    // ============================================================
-    //  Instalação do PWA
-    // ============================================================
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        _deferredPrompt = e;
-        const btn = document.getElementById('install-btn-container');
-        if (btn) btn.style.display = 'block';
-    });
-
-    window.addEventListener('appinstalled', () => {
-        const btn = document.getElementById('install-btn-container');
-        if (btn) btn.style.display = 'none';
-        showToast('Aplicativo instalado com sucesso! 🎉');
-    });
-
-    function installApp() {
-        if (!_deferredPrompt) {
-            showToast('A instalação não está disponível agora.', 'error');
-            return;
-        }
-        _deferredPrompt.prompt();
-        _deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                showToast('Instalação iniciada!');
-            } else {
-                showToast('Instalação cancelada.');
-            }
-            _deferredPrompt = null;
-            const btn = document.getElementById('install-btn-container');
-            if (btn) btn.style.display = 'none';
-        });
-    }
-
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-        const btn = document.getElementById('install-btn-container');
-        if (btn) btn.style.display = 'none';
-    }
 </script>
 </body>
 </html>

@@ -7,12 +7,12 @@ const CACHE_NAME      = 'visa-careiro-v1';
 const STATIC_CACHE    = 'visa-static-v1';
 const RUNTIME_CACHE   = 'visa-runtime-v1';
 
-// Assets que devem ser cacheados na instalação (caminhos relativos à raiz do site)
+// Assets que devem ser cacheados na instalação
 const PRECACHE_ASSETS = [
-  './index.html',
-  '../firebase-config.js',
-  './manifest.json',
-  './assets/icon-192.png'
+  './cadvisa/mobile/index.html',
+  './cadvisa/mobile/firebase-config.js',
+  './cadvisa/mobile/manifest.json',
+  './cadvisa/mobile/assets/icon-192.png'
 ];
 
 // Hosts do Firebase — sempre network-first (dados em tempo real)
@@ -164,10 +164,10 @@ self.addEventListener('push', event => {
   const data = event.data?.json() || {};
   const options = {
     body:    data.body    || 'Nova notificação CADVISA Careiro',
-    icon:    '/assets/icon-192.png',
-    badge:   '/assets/icon-192.png',
+    icon:    '../assets/icon-192.png',
+    badge:   '../assets/icon-192.png',
     vibrate: [200, 100, 200],
-    data:    { url: data.url || '/' },
+    data:    { url: data.url || './' },
     actions: [
       { action: 'open',    title: 'Abrir' },
       { action: 'dismiss', title: 'Dispensar' }
@@ -184,7 +184,7 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   if (event.action === 'dismiss') return;
-  const url = event.notification.data?.url || '/';
+  const url = event.notification.data?.url || './';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then(windowClients => {
