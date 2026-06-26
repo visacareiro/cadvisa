@@ -746,6 +746,12 @@
     // ============================================================
     //  Service Worker (opcional)
     // ============================================================
+    (function(){
+        if (!('serviceWorker' in navigator)) return;
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js', { scope: '/fiscalizacao/mobile/' }).catch(()=>{});
+        });
+    })();
 
 </script>
 </body>
