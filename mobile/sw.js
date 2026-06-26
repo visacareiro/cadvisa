@@ -4,7 +4,7 @@ const CACHE_NAME = 'cadvisa-cache-v1';
 const ASSETS = [
   './index.html',
   './manifest.json',
-  '../assets/icon-192.png',
+  './icon-192.png',
   // Bibliotecas externas usadas (opcional, mas melhora offline)
   'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap',
   'https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js',
