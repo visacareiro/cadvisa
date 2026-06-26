@@ -1,73 +1,136 @@
-// sw.js - Service Worker simples para CADVISA Careiro
+/**
+ * CADVISA Careiro — Service Worker
+ * Estratégia:
+ *   • App shell (HTML, ícones)   → Cache-First
+ *   • Google Fonts               → Stale-While-Revalidate
+ *   • Firebase / Firestore / API → Network-First (sem cache)
+ *   • Demais recursos externos   → Network-First c/ fallback de cache
+ */
 
-const CACHE_NAME = 'cadvisa-cache-v1';
-const ASSETS = [
+const CACHE_NAME   = 'cadvisa-v1';
+const SHELL_ASSETS = [
+  './',
   './index.html',
-  './manifest.json',
-  './icon-192.png',
-  // Bibliotecas externas usadas (opcional, mas melhora offline)
-  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap',
-  'https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js',
-  'https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js'
+  './assets/icon-192.png',
+  './assets/icon-512.png'
 ];
 
-// Instalação: faz o cache dos recursos estáticos
+/* ──────────────────────────────────────────────
+   INSTALL — pré-cacheia o app shell
+────────────────────────────────────────────── */
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('[SW] Cache aberto');
-        return cache.addAll(ASSETS);
-      })
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(
+        SHELL_ASSETS.map(url => new Request(url, { cache: 'reload' }))
+      );
+    }).then(() => self.skipWaiting())
   );
 });
 
-// Ativação: remove caches antigos
+/* ──────────────────────────────────────────────
+   ACTIVATE — remove caches antigas
+────────────────────────────────────────────── */
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      )
+    ).then(() => self.clients.claim())
   );
 });
 
-// Interceptação de requisições
+/* ──────────────────────────────────────────────
+   FETCH — roteamento de requisições
+────────────────────────────────────────────── */
 self.addEventListener('fetch', event => {
-  const request = event.request;
+  const { request } = event;
+  const url = new URL(request.url);
 
-  // Estratégia: stale-while-revalidate para recursos estáticos
-  // e network-first para navegação (HTML)
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          // Atualiza o cache com a nova versão
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
-          return response;
-        })
-        .catch(() => caches.match(request))
-    );
-  } else {
-    event.respondWith(
-      caches.match(request)
-        .then(cached => {
-          if (cached) {
-            // Retorna do cache e atualiza em segundo plano
-            fetch(request).then(response => {
-              if (response && response.status === 200) {
-                caches.open(CACHE_NAME).then(cache => cache.put(request, response));
-              }
-            }).catch(() => {});
-            return cached;
-          }
-          return fetch(request);
-        })
-    );
+  // 1. Firebase, Firestore, Auth, gstatic.com scripts → Network-only
+  //    (dados em tempo real não devem ser interceptados)
+  if (
+    url.hostname.includes('firebaseio.com')  ||
+    url.hostname.includes('firestore.googleapis.com') ||
+    url.hostname.includes('identitytoolkit.googleapis.com') ||
+    url.hostname.includes('securetoken.googleapis.com') ||
+    url.hostname.includes('firebase.googleapis.com') ||
+    (url.hostname === 'www.gstatic.com' && url.pathname.includes('firebasejs'))
+  ) {
+    event.respondWith(fetch(request));
+    return;
   }
+
+  // 2. Google Fonts CSS e arquivos de fonte → Stale-While-Revalidate
+  if (
+    url.hostname === 'fonts.googleapis.com' ||
+    url.hostname === 'fonts.gstatic.com'
+  ) {
+    event.respondWith(staleWhileRevalidate(request));
+    return;
+  }
+
+  // 3. App shell (mesmo origem, GET) → Cache-First
+  if (request.method === 'GET' && url.origin === self.location.origin) {
+    event.respondWith(cacheFirst(request));
+    return;
+  }
+
+  // 4. Qualquer outra coisa → Network-First c/ fallback de cache
+  event.respondWith(networkFirst(request));
 });
+
+/* ──────────────────────────────────────────────
+   Estratégias
+────────────────────────────────────────────── */
+
+/** Cache-First: usa cache se existir; caso contrário busca na rede e guarda. */
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(request);
+    if (response && response.status === 200 && response.type !== 'opaque') {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (_) {
+    // offline e sem cache: retorna página principal como fallback
+    return caches.match('./index.html');
+  }
+}
+
+/** Network-First: tenta rede; em falha usa cache. */
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request);
+    if (response && response.status === 200) {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (_) {
+    const cached = await caches.match(request);
+    return cached || caches.match('./index.html');
+  }
+}
+
+/** Stale-While-Revalidate: retorna cache imediatamente e atualiza em background. */
+async function staleWhileRevalidate(request) {
+  const cache  = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
+
+  const fetchPromise = fetch(request).then(response => {
+    if (response && response.status === 200) {
+      cache.put(request, response.clone());
+    }
+    return response;
+  }).catch(() => null);
+
+  return cached || fetchPromise;
+}

@@ -11,10 +11,10 @@
     <meta name="description" content="Sistema de Cadastro Sanitário Municipal — Consulta Mobile">
     <title>CADVISA Careiro — Consulta</title>
 
-    <link rel="icon" href="../assets/icon-192.png">
-    <link rel="shortcut icon" href="../assets/icon-192.png">
-    <link rel="apple-touch-icon" href="../assets/icon-192.png">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icon-192.png">
+    <link rel="shortcut icon" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -744,17 +744,29 @@
     boot();
 
     // ============================================================
-    //  Service Worker (opcional)
+    //  Service Worker — registro
     // ============================================================
-   
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then(reg => {
+            console.log('[SW] Registrado com sucesso. Scope:', reg.scope);
 
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
-      .then(() => console.log('[SW] Registrado com sucesso'))
-      .catch(err => console.warn('[SW] Falha no registro:', err));
-  }
+            // Notifica quando uma nova versão está disponível
+            reg.addEventListener('updatefound', () => {
+              const newWorker = reg.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  showToast('🔄 Nova versão disponível. Recarregue o app.', 'success');
+                }
+              });
+            });
+          })
+          .catch(err => console.warn('[SW] Falha ao registrar:', err));
+      });
+    }
+
+
 </script>
 </body>
 </html>
