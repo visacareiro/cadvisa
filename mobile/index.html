@@ -6,14 +6,14 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="VISA Careiro">
+    <meta name="apple-mobile-web-app-title" content="CADVISA Careiro">
     <meta name="theme-color" content="#f48aab">
     <meta name="description" content="Sistema de Cadastro Sanitário Municipal — Consulta Mobile">
-    <title>VISA Careiro — Consulta</title>
+    <title>CADVISA Careiro — Consulta</title>
 
-    <link rel="icon" href="icon-192.png">
-    <link rel="shortcut icon" href="icon-192.png">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" href="../assets/icon-192.png">
+    <link rel="shortcut icon" href="../assets/icon-192.png">
+    <link rel="apple-touch-icon" href="../assets/icon-192.png">
     <link rel="manifest" href="manifest.json">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,13 +78,6 @@
             box-shadow: 0 2px 16px rgba(244,138,171,0.07);
         }
         .topbar-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .topbar-ip {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-right: 6px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
         .btn-topbar-logout {
             background: rgba(255,255,255,0.7); border: 1.5px solid var(--border-solid); border-radius: 50px;
             padding: 6px 12px; font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif;
@@ -255,8 +248,8 @@
 <div id="loginOverlay">
     <div class="login-card">
         <div class="login-logo">
-            <div class="logo-icon"><img src="icon-192.png" alt="VISA" onerror="this.parentElement.textContent='🏥'"></div>
-            <h2>VISA Careiro</h2>
+            <div class="logo-icon"><img src="assets/icon-192.png" alt="VISA" onerror="this.parentElement.textContent='🏥'"></div>
+            <h2>CADVISA Careiro</h2>
             <p>Consulta Sanitária Municipal</p>
         </div>
         <div class="login-err" id="loginErr"></div>
@@ -270,9 +263,9 @@
 
 <div id="loadingOverlay" style="display:none;position:fixed;inset:0;background:rgba(245,232,239,.96);z-index:9000;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding-top:env(safe-area-inset-top,0px)">
     <div style="width:72px;height:72px;border-radius:22px;overflow:hidden;box-shadow:0 6px 24px rgba(244,138,171,0.35);background:var(--rosa-dark);display:flex;align-items:center;justify-content:center;font-size:36px">
-        <img src="icon-192.png" alt="VISA" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.textContent='🏥'">
+        <img src="../assets/icon-192.png" alt="VISA" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.textContent='🏥'">
     </div>
-    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700">VISA Careiro</div>
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700">CADVISA Careiro</div>
     <div style="font-size:13px;color:var(--text-muted)">Carregando dados da nuvem…</div>
     <div style="width:200px;height:6px;background:rgba(249,184,200,0.4);border-radius:50px;overflow:hidden;margin-top:4px">
         <div style="height:100%;width:60%;background:var(--rosa-dark);border-radius:50px;animation:shimmer 1.5s infinite;background-size:200% 100%"></div>
@@ -288,7 +281,6 @@
 <main class="main">
     <div class="topbar">
         <div class="topbar-title" id="topbarTitle">Estabelecimentos</div>
-        <span class="topbar-ip" id="topbarIP">🌐 carregando...</span>
         <button class="btn-topbar-logout" onclick="doLogout()">🚪 Sair</button>
     </div>
     <div class="content">
@@ -591,26 +583,8 @@
     function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
 
     // ============================================================
-    //  AUTENTICAÇÃO — COM FIREBASE AUTH E EXIBIÇÃO DE IP
+    //  AUTENTICAÇÃO — COM FIREBASE AUTH
     // ============================================================
-
-    async function getClientIP() {
-        try {
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            return data.ip || 'desconhecido';
-        } catch {
-            return 'desconhecido';
-        }
-    }
-
-    // Atualiza o IP no topbar (mobile)
-    function atualizarIP(ip) {
-        const el = document.getElementById('topbarIP');
-        if (el) {
-            el.textContent = '🌐 ' + (ip || 'não disponível');
-        }
-    }
 
     async function doLogin() {
         const email = (document.getElementById('loginEmail')?.value||'').trim().toLowerCase();
@@ -641,13 +615,7 @@
                 _currentUser = { uid: user.uid, email: user.email, ...snap.data() };
             }
 
-            // Captura e armazena o IP
-            const ip = await getClientIP();
-            try { sessionStorage.setItem('visa_ip', ip); } catch(e) {}
             try { sessionStorage.setItem('visa_session', JSON.stringify(_currentUser)); } catch(e) {}
-
-            // Exibe o IP no topbar
-            atualizarIP(ip);
 
             if (btn) btn.textContent = 'Entrando…';
             await boot();
@@ -668,7 +636,7 @@
         if (!confirm('Deseja sair?')) return;
         await _fbAuth.signOut();
         _currentUser = null;
-        try { sessionStorage.removeItem('visa_session'); sessionStorage.removeItem('visa_ip'); } catch(e) {}
+        try { sessionStorage.removeItem('visa_session'); } catch(e) {}
 
         document.getElementById('loginEmail').value = '';
         document.getElementById('loginSenha').value = '';

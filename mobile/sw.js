@@ -9,10 +9,10 @@ const RUNTIME_CACHE   = 'visa-runtime-v1';
 
 // Assets que devem ser cacheados na instalação
 const PRECACHE_ASSETS = [
-  './index.html',
-  './firebase-config.js',
-  './manifest.json',
-  './icon-192.png'
+  './mobile/index.html',
+  './mobile/firebase-config.js',
+  './mobile/manifest.json',
+  './mobile/assets/icon-192.png'
 ];
 
 // Hosts do Firebase — sempre network-first (dados em tempo real)
@@ -163,9 +163,9 @@ self.addEventListener('sync', event => {
 self.addEventListener('push', event => {
   const data = event.data?.json() || {};
   const options = {
-    body:    data.body    || 'Nova notificação VISA Careiro',
-    icon:    './icon-192.png',
-    badge:   './icon-192.png',
+    body:    data.body    || 'Nova notificação CADVISA Careiro',
+    icon:    '../assets/icon-192.png',
+    badge:   '../assets/icon-192.png',
     vibrate: [200, 100, 200],
     data:    { url: data.url || './' },
     actions: [
@@ -175,7 +175,7 @@ self.addEventListener('push', event => {
   };
   event.waitUntil(
     self.registration.showNotification(
-      data.title || 'VISA Careiro',
+      data.title || 'CADVISA Careiro',
       options
     )
   );
