@@ -746,13 +746,15 @@
     // ============================================================
     //  Service Worker (opcional)
     // ============================================================
-    (function(){
-        if (!('serviceWorker' in navigator)) return;
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js', { scope: '/fiscalizacao/mobile/' }).catch(()=>{});
-        });
-    })();
+   
 
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('[SW] Registrado com sucesso'))
+      .catch(err => console.warn('[SW] Falha no registro:', err));
+  }
 </script>
 </body>
 </html>
