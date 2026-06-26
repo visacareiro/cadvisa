@@ -7,7 +7,7 @@ const CACHE_NAME      = 'visa-careiro-v1';
 const STATIC_CACHE    = 'visa-static-v1';
 const RUNTIME_CACHE   = 'visa-runtime-v1';
 
-// Assets que devem ser cacheados na instalação (caminhos relativos à raiz)
+// Assets que devem ser cacheados na instalação (caminhos relativos à raiz do site)
 const PRECACHE_ASSETS = [
   './index.html',
   '../firebase-config.js',
