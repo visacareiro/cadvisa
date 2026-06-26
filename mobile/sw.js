@@ -9,10 +9,10 @@ const RUNTIME_CACHE   = 'visa-runtime-v1';
 
 // Assets que devem ser cacheados na instalação
 const PRECACHE_ASSETS = [
-  './cadvisa/mobile/index.html',
-  './cadvisa/mobile/firebase-config.js',
-  './cadvisa/mobile/manifest.json',
-  './cadvisa/mobile/assets/icon-192.png'
+  './index.html',
+  './manifest.json',
+  '../firebase-config.js',
+  './assets/icon-192.png'
 ];
 
 // Hosts do Firebase — sempre network-first (dados em tempo real)
